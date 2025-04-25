@@ -1,3 +1,4 @@
+WorldEnvironment
 MeshInstance3D
 Sprite3D
 CollisionShape3D
@@ -5,5 +6,4 @@ StaticBody3D
 Sprite2D
 CollisionShape2D
 StaticBody2D
-WorldEnvironment
 DirectionalLight3D

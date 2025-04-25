@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://wt8fw3kpgr2i"]
+[gd_scene load_steps=6 format=3 uid="uid://wt8fw3kpgr2i"]
 
 [ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_2mqy1"]
 
@@ -12,10 +12,12 @@ albedo_color = Color(1, 0.580392, 0.388235, 1)
 material = SubResource("StandardMaterial3D_2mqy1")
 size = Vector2(1400, 1400)
 
+[sub_resource type="Environment" id="Environment_2mqy1"]
+
 [node name="simple_scene" type="Node3D"]
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 355.629, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 66.1708, 0)
 current = true
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
@@ -35,3 +37,6 @@ transform = Transform3D(1400, 0, 0, 0, 1, 0, 0, 0, 1400, 0, 0, 0)
 modulate = Color(0.996078, 0.427451, 0.305882, 1)
 pixel_size = 0.1
 script = ExtResource("1_2mqy1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2mqy1")

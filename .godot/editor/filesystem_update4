@@ -1,12 +1,2 @@
-res://scenes/trailer_scene.tscn
-res://scenes/main_game.tscn
-res://scripts/scene_colors.gd
-res://scenes/world_building.tscn
-res://scripts/world_colors.gd
-res://scenes/main.tscn
-res://scenes/simple_world.tscn
 res://scenes/simple_scene.tscn
-res://resources/ground_material.tres
-res://resources/ground_plane.tres
-res://resources/ground_collision_shape.tres
 res://scripts/ground_color.gd
