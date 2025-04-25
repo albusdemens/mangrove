@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://cra1vnwmyfatj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lxam0"]
+albedo_color = Color(0.996078, 0.427451, 0.305882, 1)
+
+[sub_resource type="Environment" id="Environment_vu74l"]
+background_mode = 1
+background_color = Color(1, 0.9, 0.3, 1)
+fog_enabled = true
+
+[node name="trailer_scene" type="Node3D"]
+
+[node name="DirectionalLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 21.1558, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -0.153114, 122.981, 170.676)
+
+[node name="Airplane" type="Node3D" parent="."]
+transform = Transform3D(0.939693, -0.0885213, 0.330366, 0, 0.965926, 0.258819, -0.34202, -0.24321, 0.907673, 0, 60, -80)
+
+[node name="VastGround" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+size = Vector3(1400, 1, 1400)
+material = SubResource("StandardMaterial3D_lxam0")
+
+[node name="MainCamera" type="Camera3D" parent="."]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 200, 150, 200)
+current = true
+far = 2000.0
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
+shadow_enabled = true
+
+[node name="@Camera3D@21831" type="Camera3D" parent="."]
+
+[node name="@DirectionalLight3D@21844" type="DirectionalLight3D" parent="."]
+
+[node name="PixelMountain" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_vu74l")
