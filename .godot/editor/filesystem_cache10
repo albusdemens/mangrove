@@ -1,5 +1,5 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1745579232
+::res://::1745588167
 icon.svg::CompressedTexture2D/CompressedTexture2D::2131270363913553251::1745574200::1745579117::1::::<><><>0<>0<>f435a3f0e10930071ad4891a316136fb<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md.gd::GDScript/GDScript::7141385767707650522::1745576179::0::1::::<>RefCounted<><>0<>0<><>::
 ::res://addons/::1745575162
@@ -23,13 +23,8 @@ mcp_panel.tscn::PackedScene/PackedScene::6689817734643269057::1745575332::0::1::
 node_utils.gd::GDScript/GDScript::100677266048910961::1745575332::0::1::::NodeUtils<>RefCounted<><>0<>1<><>::
 resource_utils.gd::GDScript/GDScript::1984693482333116226::1745575332::0::1::::ResourceUtils<>RefCounted<><>0<>1<><>::
 script_utils.gd::GDScript/GDScript::8091914555543048975::1745575332::0::1::::ScriptUtils<>RefCounted<><>0<>1<><>::
-::res://scenes/::1745578597
-game_world.tscn::PackedScene/PackedScene::779600575292094711::1745576858::0::1::::<><><>0<>0<><>::
-main.tscn::PackedScene/PackedScene::7315406631694123579::1745576858::0::1::::<><><>0<>0<><>::
-main_game.tscn::PackedScene/PackedScene::4525711892387560362::1745576858::0::1::::<><><>0<>0<><>::
-trailer_scene.tscn::PackedScene/PackedScene::5967668570083426871::1745578597::0::1::::<><><>0<>0<><>::
-::res://scripts/::1745576345
-game_world.gd::GDScript/GDScript::1628993295346070554::1745576100::0::1::::<>Node3D<><>0<>0<><>::
-main_game.gd::GDScript/GDScript::3124124219524496793::1745576143::0::1::::<>Node3D<><>0<>0<><>::
-player_controller.gd::GDScript/GDScript::2765951106834430141::1745576110::0::1::::<>CharacterBody3D<><>0<>0<><>::
-trailer_controller.gd::GDScript/GDScript::3528428412448188469::1745576345::0::1::::<>Node3D<><>0<>0<><>::
+::res://resources/::1745587112
+ground_shape.tres::BoxShape3D::1071481460952381576::1745589052::0::1::::<><><>0<>0<><>::
+::res://scenes/::1745588793
+simple_scene.tscn::PackedScene::1585391526337548482::1745588793::0::1::::<><><>0<>0<><>::
+::res://scripts/::1745586610
