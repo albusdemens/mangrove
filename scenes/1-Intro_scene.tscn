@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://wt8fw3kpgr2i"]
+
+[ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_locir"]
+[ext_resource type="ArrayMesh" uid="uid://buwqe7r7qap4b" path="res://models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_r0udw"]
+size = Vector3(1400, 1, 1400)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2mqy1"]
+albedo_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r0udw"]
+material = SubResource("StandardMaterial3D_2mqy1")
+size = Vector2(1400, 1400)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2mqy1"]
+sky_top_color = Color(1, 0.960784, 0.619608, 1)
+sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
+ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
+ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="Sky" id="Sky_r0udw"]
+sky_material = SubResource("ProceduralSkyMaterial_2mqy1")
+
+[sub_resource type="Environment" id="Environment_lg7os"]
+background_mode = 2
+sky = SubResource("Sky_r0udw")
+
+[node name="simple_scene" type="Node3D"]
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(-0.292372, 0, -0.956305, 0, 1, 0, 0.956305, 0, -0.292372, 19.4185, 387.851, -750.009)
+current = true
+fov = 160.312
+far = 1000.0
+
+[node name="DirectionalLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 602.846, 498.775)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_r0udw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+mesh = SubResource("PlaneMesh_r0udw")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1400, 0, 0, 0, 1, 0, 0, 0, 1400, 0, 0, 0)
+modulate = Color(0, 0, 0.00392157, 0.00392157)
+pixel_size = 0.1
+script = ExtResource("1_locir")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lg7os")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 0, 0, 0)
+cast_shadow = 0
+mesh = ExtResource("2_iu64i")
+
+[node name="EnvironmentSetup" type="Node" parent="."]
+script = "res://scripts/environment_setup.gd"
