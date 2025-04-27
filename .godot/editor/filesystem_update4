@@ -1,3 +1,5 @@
 res://scenes/simple_scene.tscn
 res://demo/data/assets.tres
 res://demo/Demo.tscn
+res://basemap//terrain3d-01_00.res
+res://addons/terrain_3d/tools/importer.tscn
