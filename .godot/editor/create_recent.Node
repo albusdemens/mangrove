@@ -1,5 +1,6 @@
-WorldEnvironment
+Terrain3D
 MeshInstance3D
+WorldEnvironment
 Sprite3D
 CollisionShape3D
 StaticBody3D

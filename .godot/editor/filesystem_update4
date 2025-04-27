@@ -1,2 +1,3 @@
 res://scenes/simple_scene.tscn
-res://scripts/ground_color.gd
+res://demo/data/assets.tres
+res://demo/Demo.tscn
