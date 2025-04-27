@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://wt8fw3kpgr2i"]
+[gd_scene load_steps=11 format=3 uid="uid://wt8fw3kpgr2i"]
 
 [ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_locir"]
 [ext_resource type="ArrayMesh" uid="uid://buwqe7r7qap4b" path="res://models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
@@ -26,12 +26,20 @@ sky_material = SubResource("ProceduralSkyMaterial_2mqy1")
 background_mode = 2
 sky = SubResource("Sky_r0udw")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_locir"]
+albedo_color = Color(1, 0.65098, 0.85098, 1)
+metallic_specular = 0.0
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iu64i"]
+albedo_color = Color(1, 0.701961, 0.941176, 1)
+
 [node name="simple_scene" type="Node3D"]
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-0.292372, 0, -0.956305, 0, 1, 0, 0.956305, 0, -0.292372, 19.4185, 387.851, -750.009)
+transform = Transform3D(-0.991671, 0, 0.128796, 0, 1, 0, -0.128796, 0, -0.991671, 398.047, 276.135, -584.015)
 current = true
-fov = 160.312
+fov = 80.0
 far = 1000.0
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
@@ -45,7 +53,7 @@ shadow_enabled = true
 shape = SubResource("BoxShape3D_r0udw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, -153.287, 0, 0)
 mesh = SubResource("PlaneMesh_r0udw")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
@@ -58,7 +66,9 @@ script = ExtResource("1_locir")
 environment = SubResource("Environment_lg7os")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 0, 0, 0)
+transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, -105.789, 0, 0)
+material_override = SubResource("StandardMaterial3D_locir")
+material_overlay = SubResource("StandardMaterial3D_iu64i")
 cast_shadow = 0
 mesh = ExtResource("2_iu64i")
 
