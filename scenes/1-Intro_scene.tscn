@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://wt8fw3kpgr2i"]
+[gd_scene load_steps=12 format=3 uid="uid://wt8fw3kpgr2i"]
 
 [ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_locir"]
 [ext_resource type="ArrayMesh" uid="uid://buwqe7r7qap4b" path="res://models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
+[ext_resource type="ArrayMesh" uid="uid://dpr1slu3spfsp" path="res://models/Zeppelin/Zeppelin.obj" id="3_iu64i"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_r0udw"]
 size = Vector3(1400, 1, 1400)
@@ -37,7 +38,7 @@ albedo_color = Color(1, 0.701961, 0.941176, 1)
 [node name="simple_scene" type="Node3D"]
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-0.991671, 0, 0.128796, 0, 1, 0, -0.128796, 0, -0.991671, 398.047, 276.135, -584.015)
+transform = Transform3D(-0.991671, 0, 0.128796, 0, 1, 0, -0.128796, 0, -0.991671, 441.284, 342.168, -503.124)
 current = true
 fov = 80.0
 far = 1000.0
@@ -65,7 +66,7 @@ script = ExtResource("1_locir")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_lg7os")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Mountain" type="MeshInstance3D" parent="."]
 transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, -105.789, 0, 0)
 material_override = SubResource("StandardMaterial3D_locir")
 material_overlay = SubResource("StandardMaterial3D_iu64i")
@@ -74,3 +75,7 @@ mesh = ExtResource("2_iu64i")
 
 [node name="EnvironmentSetup" type="Node" parent="."]
 script = "res://scripts/environment_setup.gd"
+
+[node name="Zeppelin" type="MeshInstance3D" parent="."]
+transform = Transform3D(-8.74228e-07, 1.73648e-06, -19.863, 0, -19.863, -1.73648e-06, -20, -7.59039e-14, 8.68239e-07, 439.428, 637.679, 303.567)
+mesh = ExtResource("3_iu64i")
