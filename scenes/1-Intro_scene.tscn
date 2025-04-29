@@ -1,18 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://wt8fw3kpgr2i"]
+[gd_scene load_steps=11 format=3 uid="uid://wt8fw3kpgr2i"]
 
 [ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_locir"]
 [ext_resource type="ArrayMesh" uid="uid://buwqe7r7qap4b" path="res://models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
 [ext_resource type="ArrayMesh" uid="uid://dpr1slu3spfsp" path="res://models/Zeppelin/Zeppelin.obj" id="3_iu64i"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_r0udw"]
-size = Vector3(1400, 1, 1400)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2mqy1"]
-albedo_color = Color(0.780392, 0.262745, 0, 1)
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_r0udw"]
-material = SubResource("StandardMaterial3D_2mqy1")
-size = Vector2(1400, 1400)
+[ext_resource type="Script" uid="uid://dp5iybe704oei" path="res://scenes/zeppelin.gd" id="3_llk0s"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2mqy1"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -35,27 +26,17 @@ roughness = 0.8
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iu64i"]
 albedo_color = Color(1, 0.701961, 0.941176, 1)
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h3w62"]
+
 [node name="simple_scene" type="Node3D"]
 
-[node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-0.991671, 0, 0.128796, 0, 1, 0, -0.128796, 0, -0.991671, 441.284, 342.168, -503.124)
-current = true
-fov = 80.0
-far = 1000.0
+[node name="PassByCam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -871.964, 624.262, -359.962)
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 602.846, 498.775)
 light_energy = 2.0
 shadow_enabled = true
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("BoxShape3D_r0udw")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, -153.287, 0, 0)
-mesh = SubResource("PlaneMesh_r0udw")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1400, 0, 0, 0, 1, 0, 0, 0, 1400, 0, 0, 0)
@@ -67,7 +48,7 @@ script = ExtResource("1_locir")
 environment = SubResource("Environment_lg7os")
 
 [node name="Mountain" type="MeshInstance3D" parent="."]
-transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, -105.789, 0, 0)
+transform = Transform3D(-80, 0, -1.20797e-05, 0, 80, 0, 1.20797e-05, 0, -80, -227.879, -239.416, 1028.74)
 material_override = SubResource("StandardMaterial3D_locir")
 material_overlay = SubResource("StandardMaterial3D_iu64i")
 cast_shadow = 0
@@ -76,6 +57,14 @@ mesh = ExtResource("2_iu64i")
 [node name="EnvironmentSetup" type="Node" parent="."]
 script = "res://scripts/environment_setup.gd"
 
-[node name="Zeppelin" type="MeshInstance3D" parent="."]
-transform = Transform3D(-8.74228e-07, 1.73648e-06, -19.863, 0, -19.863, -1.73648e-06, -20, -7.59039e-14, 8.68239e-07, 439.428, 637.679, 303.567)
+[node name="Zeppelin" type="Node3D" parent="."]
+script = ExtResource("3_llk0s")
+
+[node name="ZeppelinMesh" type="MeshInstance3D" parent="Zeppelin"]
+transform = Transform3D(-20, 1.73648e-06, 0, -1.74846e-06, -19.863, 0, 0, 0, 19.863, -969.808, 621.759, -434.217)
 mesh = ExtResource("3_iu64i")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Zeppelin"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -788.749, 584.668, -456.327)
+shape = SubResource("CapsuleShape3D_h3w62")

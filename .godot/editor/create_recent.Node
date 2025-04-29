@@ -1,8 +1,10 @@
+CollisionShape3D
+Node3D
+Camera3D
 MeshInstance3D
 Terrain3D
 WorldEnvironment
 Sprite3D
-CollisionShape3D
 StaticBody3D
 Sprite2D
 CollisionShape2D
