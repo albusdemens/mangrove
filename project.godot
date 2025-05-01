@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 project/assembly_name="Mangrove"
 
+[editor]
+
+movie_writer/movie_file="/home/albus/Videos/ZeppelinTopView.avi"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")

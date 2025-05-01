@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://wt8fw3kpgr2i"]
+[gd_scene load_steps=15 format=3 uid="uid://wt8fw3kpgr2i"]
 
 [ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_locir"]
 [ext_resource type="ArrayMesh" uid="uid://buwqe7r7qap4b" path="res://models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
@@ -28,9 +28,12 @@ albedo_color = Color(1, 0.701961, 0.941176, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h3w62"]
 
+[sub_resource type="Animation" id="Animation_h3w62"]
+length = 0.001
+
 [sub_resource type="Animation" id="Animation_llk0s"]
 resource_name = "ZeppelinPass"
-length = 3.0
+length = 6.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -38,34 +41,23 @@ tracks/0/path = NodePath("Zeppelin:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 3),
+"times": PackedFloat32Array(0, 5.96667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, 0, 156.085)]
 }
 
-[sub_resource type="Animation" id="Animation_h3w62"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Zeppelin:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
+[sub_resource type="Animation" id="Animation_yf77u"]
+resource_name = "ZeppelinTopView"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_yf77u"]
 _data = {
 &"RESET": SubResource("Animation_h3w62"),
-&"ZeppelinPass": SubResource("Animation_llk0s")
+&"ZeppelinPass": SubResource("Animation_llk0s"),
+&"ZeppelinTopView": SubResource("Animation_yf77u")
 }
 
-[node name="simple_scene" type="Node3D"]
+[node name="Scene1" type="Node3D"]
 
 [node name="PassByCam" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -864.78, 646.232, -325.694)
@@ -111,3 +103,7 @@ shape = SubResource("CapsuleShape3D_h3w62")
 libraries = {
 &"": SubResource("AnimationLibrary_yf77u")
 }
+autoplay = "ZeppelinPass"
+
+[node name="AnimationController" type="Node" parent="."]
+script = "res://auto_play_animation.gd"
