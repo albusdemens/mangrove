@@ -9,8 +9,8 @@ The current goal for Project Mangrove is to make a gameplay video.
 All footageis in the Google Drive folder. 
 
 - [ ] Scene 1
-      - [X] Overview zeppelin
-      - [ ] Zeppelin crashes against the mountain
+  - [X] Overview zeppelin
+  - [ ] Zeppelin crashes against the mountain
 - [ ] Scene 2
 - [ ] Scene 3
 - [ ] Scene 4
