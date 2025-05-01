@@ -69,15 +69,20 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, -1050.13)]
+"values": [Vector3(0, 0, -1029.24)]
 }
-tracks/1/type = "rotation_3d"
+tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Zeppelin")
+tracks/1/path = NodePath("Zeppelin:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4twry"]
 _data = {
@@ -85,26 +90,31 @@ _data = {
 }
 
 [sub_resource type="Animation" id="Animation_6hafu"]
-length = 10.0
+length = 12.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("Zeppelin:position")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.03333, 2.03333),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0.0333333, 1.03333, 2.06667, 3.03333, 4.06667, 5.06667, 5.96667, 7.03333, 8.03333, 9.03333, 10.0667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(0, 0, -1050.13), Vector3(0, 213.041, -240.94), Vector3(0, -278.485, -26.4415)]
+"values": [Vector3(0, 216.169, -837.185), Vector3(0, 216.169, -365.112), Vector3(0, 90.7911, -47.612), Vector3(0, 266.609, 159.787), Vector3(0, 102.32, 378.202), Vector3(0, 364.606, 617.72), Vector3(0, 141.231, 857.169), Vector3(0, 344.43, 1095.31), Vector3(-1.86548, 217.226, 1266.57), Vector3(17.6603, 292.556, 1297.58), Vector3(50.3127, 424.382, 1430.5)]
 }
-tracks/1/type = "rotation_3d"
+tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Zeppelin")
-tracks/1/interp = 1
+tracks/1/path = NodePath("Zeppelin:rotation")
+tracks/1/interp = 2
 tracks/1/loop_wrap = true
-tracks/1/keys = PackedFloat32Array(0.0333333, 1, 0, 0, 0, 1, 1, 1, 0.23719, -0.0312267, 0.126736, 0.962655, 2.03333, 1, 0.23719, -0.0312267, 0.126736, 0.962655)
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0666667, 1.03333, 2.06667, 3.1, 4.06667, 5.03333, 6, 7.03333, 8.1, 9.03333, 10.0667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_l5met"]
 _data = {
@@ -116,6 +126,14 @@ _data = {
 [node name="PassByCam" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -864.78, 646.232, -325.694)
 current = true
+
+[node name="CrashCam" type="Camera3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1702.62, 1204.65, 921.851)
+h_offset = 10.0
+v_offset = 10.0
+current = true
+near = 3.022
+far = 2533.67
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 602.846, 498.775)
@@ -142,7 +160,7 @@ mesh = ExtResource("2_iu64i")
 script = "res://scripts/environment_setup.gd"
 
 [node name="Zeppelin" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1050.13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1029.24)
 script = ExtResource("3_llk0s")
 
 [node name="ZeppelinMesh" type="MeshInstance3D" parent="Zeppelin"]

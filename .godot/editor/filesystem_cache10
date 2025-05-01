@@ -1,9 +1,9 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1746103007
+::res://::1746111349
 auto_play_animation.gd::GDScript/GDScript::8253088756794156629::1746018322::0::1::::<>Node<><>0<>0<><>::
 icon.png::CompressedTexture2D/CompressedTexture2D::557325075131260776::1745732723::1745732723::1::::<><><>0<>0<>bd13ae2097a421d598bdc4fdb46fb406<>res://.godot/imported/icon.png-487276ed1e3a0c39cad0279d744ee560.bptc.ctex::
 icon.svg::CompressedTexture2D/CompressedTexture2D::2131270363913553251::1745574200::1745579117::1::::<><><>0<>0<>f435a3f0e10930071ad4891a316136fb<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
-README.md::TextFile::-1::1746065527::0::1::::<><><>0<>0<><>::
+README.md::TextFile/TextFile::-1::1746065527::0::1::::<><><>0<>0<><>::
 README.md.gd::GDScript/GDScript::7141385767707650522::1745576179::0::1::::<>RefCounted<><>0<>0<><>::
 ::res://addons/::1745732719
 ::res://addons/godot_mcp/::1745579084
@@ -106,8 +106,8 @@ README.md::TextFile/TextFile::-1::1745945648::0::1::::<><><>0<>0<><>::
 ::res://resources/::1745589100
 ground_box.tres::BoxShape3D/BoxShape3D::2173031355176847007::1745589100::0::1::::<><><>0<>0<><>::
 ground_shape.tres::BoxShape3D/BoxShape3D::1071481460952381576::1745589052::0::1::::<><><>0<>0<><>::
-::res://scenes/::1746102224
-1-Intro_scene.tscn::PackedScene::1585391526337548482::1746102224::0::1::::<><><>0<>0<><>::uid://dxno84r3ffghx::::res://scripts/ground_color.gd<>uid://buwqe7r7qap4b::::res://models/mountain_histogram_40x40_godot.obj<>uid://dpr1slu3spfsp::::res://models/Zeppelin/Zeppelin.obj<>uid://dp5iybe704oei::::res://scenes/zeppelin.gd
+::res://scenes/::1746104391
+1-Intro_scene.tscn::PackedScene::1585391526337548482::1746104391::0::1::::<><><>0<>0<><>::uid://dxno84r3ffghx::::res://scripts/ground_color.gd<>uid://buwqe7r7qap4b::::res://models/mountain_histogram_40x40_godot.obj<>uid://dpr1slu3spfsp::::res://models/Zeppelin/Zeppelin.obj<>uid://dp5iybe704oei::::res://scenes/zeppelin.gd
 terrain_3d.gd::GDScript/GDScript::8674232198485148980::1745741183::0::1::::<>Terrain3D<><>0<>0<><>::
 zeppelin.gd::GDScript/GDScript::8274554693458497344::1745945865::0::1::::<>Node3D<><>0<>0<><>::
 ::res://scripts/::1745945734
