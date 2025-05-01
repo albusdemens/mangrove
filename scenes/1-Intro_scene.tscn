@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://wt8fw3kpgr2i"]
+[gd_scene load_steps=19 format=3 uid="uid://wt8fw3kpgr2i"]
 
 [ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_locir"]
 [ext_resource type="ArrayMesh" uid="uid://buwqe7r7qap4b" path="res://models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
@@ -57,6 +57,60 @@ _data = {
 &"ZeppelinTopView": SubResource("Animation_yf77u")
 }
 
+[sub_resource type="Animation" id="Animation_3cioc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Zeppelin:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, -1050.13)]
+}
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Zeppelin")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4twry"]
+_data = {
+&"RESET": SubResource("Animation_3cioc")
+}
+
+[sub_resource type="Animation" id="Animation_6hafu"]
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Zeppelin:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.03333, 2.03333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -1050.13), Vector3(0, 213.041, -240.94), Vector3(0, -278.485, -26.4415)]
+}
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Zeppelin")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0.0333333, 1, 0, 0, 0, 1, 1, 1, 0.23719, -0.0312267, 0.126736, 0.962655, 2.03333, 1, 0.23719, -0.0312267, 0.126736, 0.962655)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l5met"]
+_data = {
+&"ZeppelinCrashAnim": SubResource("Animation_6hafu")
+}
+
 [node name="Scene1" type="Node3D"]
 
 [node name="PassByCam" type="Camera3D" parent="."]
@@ -88,6 +142,7 @@ mesh = ExtResource("2_iu64i")
 script = "res://scripts/environment_setup.gd"
 
 [node name="Zeppelin" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1050.13)
 script = ExtResource("3_llk0s")
 
 [node name="ZeppelinMesh" type="MeshInstance3D" parent="Zeppelin"]
@@ -99,7 +154,7 @@ skeleton = NodePath("../..")
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -788.749, 584.668, -456.327)
 shape = SubResource("CapsuleShape3D_h3w62")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="ZeppelinPass" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_yf77u")
 }
@@ -107,3 +162,9 @@ autoplay = "ZeppelinPass"
 
 [node name="AnimationController" type="Node" parent="."]
 script = "res://auto_play_animation.gd"
+
+[node name="ZeppelinCrash" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_4twry"),
+&"ZeppelinCrash": SubResource("AnimationLibrary_l5met")
+}
