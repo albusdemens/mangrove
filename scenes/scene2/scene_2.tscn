@@ -1,10 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8e6c3t2yj84p"]
+[gd_scene load_steps=6 format=3 uid="uid://c8e6c3t2yj84p"]
 
-[ext_resource type="ArrayMesh" uid="uid://btsm6aes5iql6" path="res://models/mountain_histogram_40x40_godot.obj" id="1_3r24c"]
+[ext_resource type="ArrayMesh" uid="uid://d1u2cubcyl2qq" path="res://models/normalized_histogram_mountain.obj" id="1_3r24c"]
+[ext_resource type="ArrayMesh" uid="uid://d1vs8udvi0obh" path="res://models/godot_mountain.obj" id="2_ogt5y"]
 
 [sub_resource type="Environment" id="Environment_8dwar"]
 background_mode = 1
 background_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_3r24c"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ogt5y"]
+diffuse_mode = 1
+specular_mode = 1
+albedo_color = Color(1, 0.701961, 0.941176, 1)
+albedo_texture = SubResource("CanvasTexture_3r24c")
 
 [node name="Scene2" type="Node3D"]
 
@@ -12,7 +21,27 @@ background_color = Color(0.780392, 0.262745, 0, 1)
 environment = SubResource("Environment_8dwar")
 
 [node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1.35314, 0, 0, 0, -2.23324e-07, 1, 0, -5.10906, -4.37114e-08, 0, 30, 0)
+fov = 16.875
 
-[node name="MountainHistogram40x40Godot" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35488, 0, 0.88544)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.567896, -0.190513, -0.800749, -0.778964, 0.189891, -0.597625, 0.26591, 0.963144, -0.0405642, 10, 20, 10)
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.993295, -0.011614, 0.115025, 0.115025, -0.199229, 0.973179, 0.0116138, 0.979884, 0.199229, -10, 20, -10)
+
+[node name="DirectionalLight3D4" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 20, -10)
+
+[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 20, 10)
+
+[node name="NormalizedHistogramMountain" type="MeshInstance3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, 2.38498e-07, 20, 0, -20, 2.38498e-07, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_ogt5y")
 mesh = ExtResource("1_3r24c")
+
+[node name="Cube" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.0961555, 0, 0, 0, 0.0961555, 0, 0, 0, 0.0961555, 0, 20, 0)
+mesh = ExtResource("2_ogt5y")
