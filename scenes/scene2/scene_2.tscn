@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8e6c3t2yj84p"]
+
+[sub_resource type="Environment" id="Environment_8dwar"]
+background_mode = 1
+background_color = Color(0.780392, 0.262745, 0, 1)
+
+[node name="Scene2" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8dwar")
+
+[node name="Camera3D" type="Camera3D" parent="."]
