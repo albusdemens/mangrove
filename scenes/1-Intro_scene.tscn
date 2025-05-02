@@ -1,9 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://wt8fw3kpgr2i"]
+[gd_scene load_steps=20 format=3 uid="uid://wt8fw3kpgr2i"]
 
 [ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_locir"]
 [ext_resource type="ArrayMesh" uid="uid://buwqe7r7qap4b" path="res://models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
 [ext_resource type="ArrayMesh" uid="uid://dpr1slu3spfsp" path="res://models/Zeppelin/Zeppelin.obj" id="3_iu64i"]
-[ext_resource type="Script" uid="uid://dp5iybe704oei" path="res://scenes/zeppelin.gd" id="3_llk0s"]
+[ext_resource type="Script" uid="uid://cg7j1bjfn3hpe" path="res://scripts/animation_controller.gd" id="4_llk0s"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2mqy1"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -58,7 +58,7 @@ _data = {
 }
 
 [sub_resource type="Animation" id="Animation_3cioc"]
-length = 0.001
+length = 10.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -69,19 +69,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0, -1029.24)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Zeppelin:rotation")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
+"values": [Vector3(-1000, 216.169, -1000)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4twry"]
@@ -95,25 +83,13 @@ tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("Zeppelin:position")
-tracks/0/interp = 2
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.0333333, 1.03333, 2.06667, 3.03333, 4.06667, 5.06667, 5.96667, 7.03333, 8.03333, 9.03333, 10.0667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 1, 2, 3.03333, 4, 5, 6, 7, 8, 9.03333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(0, 216.169, -837.185), Vector3(0, 216.169, -365.112), Vector3(0, 90.7911, -47.612), Vector3(0, 266.609, 159.787), Vector3(0, 102.32, 378.202), Vector3(0, 364.606, 617.72), Vector3(0, 141.231, 857.169), Vector3(0, 344.43, 1095.31), Vector3(-1.86548, 217.226, 1266.57), Vector3(17.6603, 292.556, 1297.58), Vector3(50.3127, 424.382, 1430.5)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Zeppelin:rotation")
-tracks/1/interp = 2
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0666667, 1.03333, 2.06667, 3.1, 4.06667, 5.03333, 6, 7.03333, 8.1, 9.03333, 10.0667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0)]
+"values": [Vector3(0, 300, -1200), Vector3(0, 250, -900), Vector3(0, 400, -600), Vector3(0, 290, -300), Vector3(0, 175, 0), Vector3(0, 300, 300), Vector3(0, 370, 600), Vector3(0, 190, 900), Vector3(0, 350, 1200), Vector3(0, 340, 1580)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_l5met"]
@@ -121,19 +97,17 @@ _data = {
 &"ZeppelinCrashAnim": SubResource("Animation_6hafu")
 }
 
-[node name="Scene1" type="Node3D"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_llk0s"]
+
+[node name="Scene1_1" type="Node3D"]
 
 [node name="PassByCam" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -864.78, 646.232, -325.694)
-current = true
 
 [node name="CrashCam" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1702.62, 1204.65, 921.851)
-h_offset = 10.0
-v_offset = 10.0
+transform = Transform3D(1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, -2000, 300, 0)
 current = true
-near = 3.022
-far = 2533.67
+far = 5000.0
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 602.846, 498.775)
@@ -150,7 +124,7 @@ script = ExtResource("1_locir")
 environment = SubResource("Environment_lg7os")
 
 [node name="Mountain" type="MeshInstance3D" parent="."]
-transform = Transform3D(-80, 0, -1.20797e-05, 0, 80, 0, 1.20797e-05, 0, -80, -227.879, -239.416, 1028.74)
+transform = Transform3D(-80, 0, -1.20797e-05, 0, 80, 0, 1.20797e-05, 0, -80, -1000, -239.416, 1028.74)
 material_override = SubResource("StandardMaterial3D_locir")
 material_overlay = SubResource("StandardMaterial3D_iu64i")
 cast_shadow = 0
@@ -160,8 +134,7 @@ mesh = ExtResource("2_iu64i")
 script = "res://scripts/environment_setup.gd"
 
 [node name="Zeppelin" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1029.24)
-script = ExtResource("3_llk0s")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1000, 216.169, -1000)
 
 [node name="ZeppelinMesh" type="MeshInstance3D" parent="Zeppelin"]
 transform = Transform3D(-20, 1.73648e-06, 0, -1.74846e-06, -19.863, 0, 0, 0, 19.863, -969.808, 621.759, -434.217)
@@ -173,16 +146,23 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -788.749, 584.668, -456.327)
 shape = SubResource("CapsuleShape3D_h3w62")
 
 [node name="ZeppelinPass" type="AnimationPlayer" parent="."]
+active = false
 libraries = {
 &"": SubResource("AnimationLibrary_yf77u")
 }
-autoplay = "ZeppelinPass"
-
-[node name="AnimationController" type="Node" parent="."]
-script = "res://auto_play_animation.gd"
 
 [node name="ZeppelinCrash" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_4twry"),
 &"ZeppelinCrash": SubResource("AnimationLibrary_l5met")
 }
+playback_auto_capture = false
+
+[node name="AnimationController" type="Node" parent="."]
+script = ExtResource("4_llk0s")
+
+[node name="Origin" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Origin"]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+shape = SubResource("SphereShape3D_llk0s")
