@@ -8,17 +8,18 @@ background_mode = 1
 background_color = Color(0.780392, 0.262745, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3r24c"]
+shading_mode = 2
 albedo_color = Color(1, 0.701961, 0.941176, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c5w0c"]
-render_priority = 0
+render_priority = 1
 shader = ExtResource("2_oq54p")
 shader_parameter/low_color = Color(0.9, 0.7, 0.9, 1)
 shader_parameter/mid_color = Color(0.7, 0.3, 0.7, 1)
 shader_parameter/high_color = Color(0.4, 0, 0.4, 1)
 shader_parameter/min_height = 0.0
-shader_parameter/max_height = 1.0
-shader_parameter/use_contour_lines = true
+shader_parameter/max_height = 20.0
+shader_parameter/use_contour_lines = false
 shader_parameter/contour_spacing = 0.05
 shader_parameter/contour_thickness = 0.005
 
@@ -42,10 +43,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 20, -10)
 
 [node name="DirectionalLight3D3" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 20, 10)
-
-[node name="Cube" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.402763, -0.915304, 0, 0.915304, 0.402763, 0, 0, 0, 1, -1.71525, 19.007, 1.44399)
-mesh = ExtResource("2_ogt5y")
 
 [node name="Mountain" type="MeshInstance3D" parent="."]
 transform = Transform3D(20, 0, 0, 0, 2.38498e-07, 20, 0, -20, 2.38498e-07, 0, 0, 0)
