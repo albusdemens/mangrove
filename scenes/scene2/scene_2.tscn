@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8e6c3t2yj84p"]
+[gd_scene load_steps=3 format=3 uid="uid://c8e6c3t2yj84p"]
+
+[ext_resource type="ArrayMesh" uid="uid://btsm6aes5iql6" path="res://models/mountain_histogram_40x40_godot.obj" id="1_3r24c"]
 
 [sub_resource type="Environment" id="Environment_8dwar"]
 background_mode = 1
@@ -10,3 +12,7 @@ background_color = Color(0.780392, 0.262745, 0, 1)
 environment = SubResource("Environment_8dwar")
 
 [node name="Camera3D" type="Camera3D" parent="."]
+
+[node name="MountainHistogram40x40Godot" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.35488, 0, 0.88544)
+mesh = ExtResource("1_3r24c")
