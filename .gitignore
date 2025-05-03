@@ -15,3 +15,13 @@ data_*/
 mono_crash.*.json
 *.import
 *.png
+
+# VSCode-specific ignores
+.vscode/
+
+# Exported builds
+export/
+
+# Build artifacts
+build/
+bin/
