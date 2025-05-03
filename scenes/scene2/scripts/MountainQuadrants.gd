@@ -1,38 +1,41 @@
-@tool # Add this to make the script run in editor
 extends MeshInstance3D
 
 @export var band1_normal: Vector3 = Vector3(1, 0, 0).normalized()
 @export var band2_normal: Vector3 = Vector3(0, 0, 1).normalized()
-@export var overlay_opacity: float = 0.15 # Adjust transparency level
-@export var update_overlay: bool = false: set = _update_overlay # Button to update in editor
+@export var overlay_opacity: float = 0.3
+@export var character_scale: float = 0.1
+@export var motion_speed: float = 0.5
+@export var motion_radius: float = 1.0  # Reduced radius to keep objects closer to center
+
+# Define paths to 3D models for each character type
+@export_dir var models_directory: String = "res://models/"
+@export var cube_model_path: String = "res://models/cube.tscn"
+@export var pyramid_model_path: String = "res://models/pyramid.tscn"
+@export var sphere_model_path: String = "res://models/sphere.tscn"
+@export var octahedron_model_path: String = "res://models/octahedron.tscn"
 
 var highest_point: Vector3 = Vector3(0, 0, 0)
-var original_material = null
-var overlay: MeshInstance3D = null
+var characters = []
 
-func _update_overlay(_value):
-	update_overlay = false # Reset the button
-	if Engine.is_editor_hint():
-		# Remove existing overlay if any
-		if overlay and overlay.is_inside_tree():
-			overlay.queue_free()
-			await get_tree().process_frame
-		# Create new overlay
-		calculate_highest_point()
-		create_quadrant_overlay()
+# Define quadrant colors - same as used in the shader
+var quadrant_colors = {
+	1: Color(1.0, 0.0, 0.0),  # Red - Q1
+	2: Color(0.0, 1.0, 0.0),  # Green - Q2
+	3: Color(0.0, 0.0, 1.0),  # Blue - Q3
+	4: Color(1.0, 1.0, 0.0)   # Yellow - Q4
+}
 
 func _ready():
-	if not Engine.is_editor_hint():
-		# Only do this at runtime, not in editor
-		calculate_highest_point()
-		create_quadrant_overlay()
-
-func calculate_highest_point():
-	# Store the original material
-	if material_override:
-		original_material = material_override
+	# Find the highest point of the mesh
+	find_highest_point()
 	
-	# Find the highest point of the mesh in world space
+	# Apply the quadrant overlay
+	apply_quadrant_overlay()
+	
+	# Place characters at the highest point
+	place_characters()
+
+func find_highest_point():
 	var mesh_data = get_mesh()
 	if mesh_data:
 		var highest_y = -INF
@@ -53,9 +56,6 @@ func calculate_highest_point():
 			var arrays = arr_mesh.surface_get_arrays(0)
 			if arrays.size() > 0:
 				vertices = arrays[Mesh.ARRAY_VERTEX]
-		else:
-			printerr("Error: Unsupported mesh type.")
-			return
 
 		if not vertices.is_empty():
 			for vertex in vertices:
@@ -68,48 +68,47 @@ func calculate_highest_point():
 		else:
 			print("No vertices found in mesh")
 
-func create_quadrant_overlay():
-	# Create a duplicate of the mesh to use as an overlay
-	overlay = MeshInstance3D.new()
-	overlay.mesh = mesh.duplicate()
+func apply_quadrant_overlay():
+	# Create a duplicate mesh for the overlay
+	var overlay = MeshInstance3D.new()
+	overlay.mesh = get_mesh().duplicate()
 	overlay.name = "QuadrantOverlay"
 	
-	# Create the overlay shader material
+	# Create transparent shader material
 	var shader_mat = ShaderMaterial.new()
 	var shader = Shader.new()
 	
-	# Shader for transparent quadrant colors
 	shader.code = """
 shader_type spatial;
-render_mode blend_mix, depth_test_disabled, unshaded;
+render_mode blend_mix, cull_disabled, unshaded;
 
-uniform vec3 highest_point = vec3(0.0, 0.0, 0.0);
-uniform vec3 band1_normal = vec3(1.0, 0.0, 0.0);
-uniform vec3 band2_normal = vec3(0.0, 0.0, 1.0);
-uniform float opacity = 0.3;
+uniform vec3 highest_point;
+uniform vec3 band1_normal;
+uniform vec3 band2_normal;
+uniform float opacity;
 
 void fragment() {
-	// Get world position
+	// World position calculation
 	vec3 world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	
-	// Calculate direction vectors
+	// Direction from highest point
 	vec3 dir_to_highest = world_pos - highest_point;
 	
-	// Calculate distance from planes
+	// Calculate quadrant
 	float dist1 = dot(dir_to_highest, band1_normal);
 	float dist2 = dot(dir_to_highest, band2_normal);
 	
-	// Assign colors based on quadrant with transparency
-	vec4 color = vec4(0.5, 0.5, 0.5, 0.0); // Default transparent
+	// Set color based on quadrant
+	vec4 color = vec4(0.5, 0.5, 0.5, 0.0);
 	
 	if (dist1 > 0.0 && dist2 > 0.0) {
-		color = vec4(1.0, 0.0, 0.0, opacity); // Quadrant 1: Red
+		color = vec4(1.0, 0.0, 0.0, opacity); // Red - Q1
 	} else if (dist1 < 0.0 && dist2 > 0.0) {
-		color = vec4(0.0, 1.0, 0.0, opacity); // Quadrant 2: Green
+		color = vec4(0.0, 1.0, 0.0, opacity); // Green - Q2
 	} else if (dist1 < 0.0 && dist2 < 0.0) {
-		color = vec4(0.0, 0.0, 1.0, opacity); // Quadrant 3: Blue
+		color = vec4(0.0, 0.0, 1.0, opacity); // Blue - Q3
 	} else if (dist1 > 0.0 && dist2 < 0.0) {
-		color = vec4(1.0, 1.0, 0.0, opacity); // Quadrant 4: Yellow
+		color = vec4(1.0, 1.0, 0.0, opacity); // Yellow - Q4
 	}
 	
 	ALBEDO = color.rgb;
@@ -123,22 +122,151 @@ void fragment() {
 	shader_mat.set_shader_parameter("band2_normal", band2_normal)
 	shader_mat.set_shader_parameter("opacity", overlay_opacity)
 	
-	# Apply the material to the overlay
+	# Apply material and offset slightly to prevent z-fighting
 	overlay.material_override = shader_mat
+	overlay.position += Vector3(0, 0.02, 0)
 	
-	# Position the overlay slightly above the mountain to prevent z-fighting
-	overlay.position = Vector3(0, 0.01, 0) # Small offset to prevent z-fighting
-	
-	# Add the overlay as a child
+	# Add to scene
 	add_child(overlay)
+	print("Added quadrant overlay")
+
+func place_characters():
+	# Create a parent node to hold all characters
+	var characters_container = Node3D.new()
+	characters_container.name = "Characters"
+	add_child(characters_container)
 	
-	# Make sure the overlay is properly set up in the scene tree
-	overlay.owner = get_tree().edited_scene_root if Engine.is_editor_hint() else owner
+	# The shapes we'll create (4 types)
+	var shape_types = ["Cube", "Pyramid", "Sphere", "Octahedron"]
 	
-	print("Added quadrant overlay with transparency")
+	# Position offset around the highest point
+	var base_height = highest_point.y + 2.0  # Position characters higher above the terrain for visibility
+	
+	# Place each shape type in each quadrant
+	for quadrant in range(1, 5):
+		var shape_type = shape_types[quadrant - 1]
+		
+		# Calculate 4 positions within this quadrant
+		for i in range(4):
+			# Calculate position - spread the objects out in their quadrant
+			var angle = randf_range(0, PI/2) + (PI/2) * (quadrant - 1)
+			var distance = randf_range(3.0, 5.0)
+			var pos_x = highest_point.x + cos(angle) * distance
+			var pos_z = highest_point.z + sin(angle) * distance
+			
+			# Create the character using the corresponding model or fallback
+			var model_path = ""
+			match shape_type:
+				"Cube": model_path = cube_model_path
+				"Pyramid": model_path = pyramid_model_path
+				"Sphere": model_path = sphere_model_path
+				"Octahedron": model_path = octahedron_model_path
+			
+			var character = load_character_model(shape_type, model_path, quadrant)
+			
+			if character:
+				# Position the character
+				character.position = Vector3(pos_x, base_height, pos_z)
+				character.scale = Vector3(character_scale, character_scale, character_scale)
+				
+				# Store the original position for movement calculations
+				character.set_meta("original_pos", Vector3(pos_x, base_height, pos_z))
+				character.set_meta("movement_phase", randf() * 2.0 * PI)  # Random starting phase
+				character.set_meta("quadrant", quadrant)  # Store the quadrant
+				
+				characters.append(character)
+				characters_container.add_child(character)
+				
+				print("Placed ", shape_type, " at position ", character.position, " in quadrant ", quadrant)
+			else:
+				print("Failed to load model for ", shape_type)
+			
+	print("Placed characters at the highest point")
+
+func load_character_model(shape_type: String, model_path: String, quadrant: int) -> Node3D:
+	# Check if the model path exists
+	if not FileAccess.file_exists(model_path):
+		print("Model file not found: ", model_path)
+		# Fall back to creating a primitive shape
+		return create_fallback_shape(shape_type, quadrant)
+	
+	# Load the model
+	var model_scene = load(model_path)
+	if not model_scene:
+		print("Failed to load model: ", model_path)
+		return create_fallback_shape(shape_type, quadrant)
+	
+	# Instance the model scene
+	var model_instance = model_scene.instantiate()
+	if not model_instance:
+		print("Failed to instantiate model: ", model_path)
+		return create_fallback_shape(shape_type, quadrant)
+	
+	model_instance.name = shape_type
+	
+	# Set color based on quadrant
+	var color = quadrant_colors[quadrant]
+	
+	# Try to find and update materials in the model
+	apply_color_to_model(model_instance, color)
+	
+	return model_instance
+
+func apply_color_to_model(node: Node, color: Color):
+	# Recursively search for MeshInstance3D nodes and apply color
+	if node is MeshInstance3D:
+		var mesh_instance = node as MeshInstance3D
+		
+		# Check for existing materials
+		if mesh_instance.material_override:
+			# Clone the material to avoid modifying the original
+			var new_material = mesh_instance.material_override.duplicate()
+			if new_material is BaseMaterial3D:
+				new_material.albedo_color = color
+				mesh_instance.material_override = new_material
+		else:
+			# Create a new material
+			var new_material = StandardMaterial3D.new()
+			new_material.albedo_color = color
+			mesh_instance.material_override = new_material
+	
+	# Check child nodes
+	for child in node.get_children():
+		apply_color_to_model(child, color)
+
+func create_fallback_shape(shape_type: String, quadrant: int) -> MeshInstance3D:
+	print("Creating fallback shape for ", shape_type)
+	var shape_instance = MeshInstance3D.new()
+	shape_instance.name = shape_type
+	
+	# Create a different shape based on type
+	match shape_type:
+		"Cube":
+			var box_mesh = BoxMesh.new()
+			shape_instance.mesh = box_mesh
+		"Pyramid":
+			var prism_mesh = PrismMesh.new()
+			prism_mesh.size = Vector3(1, 1, 1)
+			shape_instance.mesh = prism_mesh
+		"Sphere":
+			var sphere_mesh = SphereMesh.new()
+			shape_instance.mesh = sphere_mesh
+		"Octahedron":
+			# Better octahedron approximation
+			var sphere_mesh = SphereMesh.new()
+			sphere_mesh.radial_segments = 4
+			sphere_mesh.rings = 2
+			shape_instance.mesh = sphere_mesh
+	
+	# Set color based on quadrant
+	var material = StandardMaterial3D.new()
+	material.albedo_color = quadrant_colors[quadrant]
+	
+	shape_instance.material_override = material
+	
+	return shape_instance
 
 func get_player_quadrant(player_position: Vector3) -> int:
-	# Transform player position to the mountain's local space
 	var local_player_pos = global_transform.inverse() * player_position
 	var local_highest_point = global_transform.inverse() * highest_point
 	var local_band1_normal = global_transform.basis.inverse() * band1_normal
@@ -155,12 +283,37 @@ func get_player_quadrant(player_position: Vector3) -> int:
 		return 3
 	elif dist1 > 0.0 && dist2 < 0.0:
 		return 4
-	return 0 # Or some default value if needed
+	return 0
 
-func _process(_delta):
-	if not Engine.is_editor_hint(): # Only run this at runtime
-		var player = get_tree().get_first_node_in_group("players")
-		if player:
-			var _player_quadrant = get_player_quadrant(player.global_position)
-			# Uncomment to debug:
-			# print("Player is in quadrant:", _player_quadrant)
+func _process(delta):
+	# Update character movement
+	update_character_movement(delta)
+	
+	# Check player quadrant
+	var player = get_tree().get_first_node_in_group("players")
+	if player:
+		var _player_quadrant = get_player_quadrant(player.global_position)
+
+func update_character_movement(delta):
+	for character in characters:
+		var original_pos = character.get_meta("original_pos")
+		var phase = character.get_meta("movement_phase")
+		var quadrant = character.get_meta("quadrant")
+		
+		# Update the phase
+		phase += delta * motion_speed
+		character.set_meta("movement_phase", phase)
+		
+		# Calculate new position with circular motion - adjust based on quadrant
+		var angle_offset = (quadrant - 1) * PI/2  # 0, 90, 180, or 270 degrees
+		var offset_x = cos(phase + angle_offset) * motion_radius
+		var offset_z = sin(phase + angle_offset) * motion_radius
+		
+		# Add small up and down bobbing motion
+		var offset_y = sin(phase * 2.0) * 0.3
+		
+		# Update position
+		character.position = original_pos + Vector3(offset_x, offset_y, offset_z)
+		
+		# Also add a spinning effect
+		character.rotation.y = phase
