@@ -1,11 +1,63 @@
-[gd_scene load_steps=6 format=3 uid="uid://c8e6c3t2yj84p"]
+[gd_scene load_steps=10 format=3 uid="uid://c8e6c3t2yj84p"]
 
 [ext_resource type="ArrayMesh" uid="uid://d1vs8udvi0obh" path="res://models/godot_mountain.obj" id="2_ogt5y"]
 [ext_resource type="Shader" uid="uid://babp71s1wsreb" path="res://shaders/scene_2.gdshader" id="2_oq54p"]
+[ext_resource type="Script" uid="uid://b1mhbl4fwl2g7" path="res://scripts/MountainQuadrants.gd" id="3_oq54p"]
+
+[sub_resource type="GDScript" id="GDScript_ogt5y"]
+script/source = "extends Node3D
+
+func _ready():
+	var mountain = $Mountain  # Adjust to match your node path
+	
+	# Create a new shader material
+	var material = ShaderMaterial.new()
+	var shader = Shader.new()
+	
+	# Define shader with origin adjustment
+	shader.code = \"\"\"
+shader_type spatial;
+
+void fragment() {
+	// Get vertex position relative to model center
+	vec3 pos = VERTEX;
+	
+	// Create quadrants with very clear colors
+	if (pos.x < 0.0 && pos.z < 0.0) {
+		ALBEDO = vec3(1.0, 0.0, 0.0); // Pure red
+	} else if (pos.x >= 0.0 && pos.z < 0.0) {
+		ALBEDO = vec3(0.0, 1.0, 0.0); // Pure green
+	} else if (pos.x < 0.0 && pos.z >= 0.0) {
+		ALBEDO = vec3(0.0, 0.0, 1.0); // Pure blue
+	} else {
+		ALBEDO = vec3(1.0, 1.0, 0.0); // Yellow
+	}
+}
+\"\"\"
+	
+	# Assign shader to material
+	material.shader = shader
+	
+	# Apply material to mountain mesh
+	mountain.material_override = material
+	
+	# Debug message
+	print(\"Applied quadrant shader with pure colors\")
+"
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ogt5y"]
+sky_top_color = Color(1, 0.960784, 0.619608, 1)
+sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
+ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
+ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="Sky" id="Sky_oq54p"]
+sky_material = SubResource("ProceduralSkyMaterial_ogt5y")
 
 [sub_resource type="Environment" id="Environment_8dwar"]
-background_mode = 1
+background_mode = 2
 background_color = Color(0.780392, 0.262745, 0, 1)
+sky = SubResource("Sky_oq54p")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3r24c"]
 shading_mode = 2
@@ -24,6 +76,7 @@ shader_parameter/contour_spacing = 0.05
 shader_parameter/contour_thickness = 0.005
 
 [node name="Scene2" type="Node3D"]
+script = SubResource("GDScript_ogt5y")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8dwar")
@@ -50,3 +103,4 @@ material_override = SubResource("StandardMaterial3D_3r24c")
 material_overlay = SubResource("ShaderMaterial_c5w0c")
 mesh = ExtResource("2_ogt5y")
 skeleton = NodePath("")
+script = ExtResource("3_oq54p")
