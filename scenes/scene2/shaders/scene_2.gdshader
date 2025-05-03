@@ -17,10 +17,10 @@ void vertex() {
 void fragment() {
     // Get height from the model's Y position
     float height = VERTEX.y;
-    
+
     // Calculate normalized height (0-1 range)
     float normalized_height = clamp((height - min_height) / (max_height - min_height), 0.0, 1.0);
-    
+
     // Interpolate between the three colors based on height
     vec4 color;
     if (normalized_height < 0.5) {
@@ -30,7 +30,7 @@ void fragment() {
         // Blend from mid to high
         color = mix(mid_color, high_color, (normalized_height - 0.5) * 2.0);
     }
-    
+
     // Add contour lines if enabled
     if (use_contour_lines) {
         float contour_value = mod(height, contour_spacing);
@@ -39,7 +39,7 @@ void fragment() {
             color.rgb *= 0.7;
         }
     }
-    
+
     // Apply the final color
     ALBEDO = color.rgb;
 }
