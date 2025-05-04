@@ -1,3 +1,4 @@
+@tool  # Add this at the very top
 extends MeshInstance3D
 
 @export var band1_normal: Vector3 = Vector3(1, 0, 0).normalized()
@@ -16,6 +17,19 @@ var quadrant_colors = {
 
 func _ready():
 	find_highest_point()
+	apply_quadrant_overlay()
+
+# Add this to update when exported properties change in editor
+func _validate_property(property):
+	if property.name in ["band1_normal", "band2_normal", "overlay_opacity"]:
+		if Engine.is_editor_hint():
+			call_deferred("recreate_overlay")
+
+# Add this to recreate overlay when properties change
+func recreate_overlay():
+	var overlay = find_child("QuadrantOverlay")
+	if overlay:
+		overlay.queue_free()
 	apply_quadrant_overlay()
 
 func find_highest_point():
@@ -46,10 +60,6 @@ func find_highest_point():
 				if world_pos.y > highest_y:
 					highest_y = world_pos.y
 					highest_point = world_pos
-			
-			print("Highest point found at: ", highest_point)
-		else:
-			print("No vertices found in mesh")
 
 func apply_quadrant_overlay():
 	var overlay = MeshInstance3D.new()
@@ -102,7 +112,10 @@ void fragment() {
 	overlay.position += Vector3(0, 0.02, 0)
 	
 	add_child(overlay)
-	print("Added quadrant overlay")
+	
+	# Make visible in editor
+	if Engine.is_editor_hint():
+		overlay.owner = get_tree().edited_scene_root
 
 func get_quadrant(world_position: Vector3) -> int:
 	var local_pos = global_transform.inverse() * world_position
