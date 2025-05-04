@@ -11,8 +11,11 @@ All footage is in the Google Drive folder.
 - [X] Scene 1 - note: for these scenes, check the Scene1 branch
   - [X] Overview zeppelin
   - [X] Zeppelin crashes against the mountain
-- [ ] Scene 2
-- [ ] Scene 3
+- [ ] Scene 2 & 3
+  - [ ] Camera movement along the mountain (top to bottom)
+  - [ ] View of the mountain top, with 16 characters
+  - [ ] Show mountain top split in four quadrants
+  - [ ] The characters start moving
 - [ ] Scene 4
 - [ ] Scene 5
 - [ ] Scene 6

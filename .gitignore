@@ -25,3 +25,8 @@ export/
 # Build artifacts
 build/
 bin/
+notebooks/mountain_split_bottom_left.obj
+notebooks/mountain_split_bottom_right.obj
+.gitignore
+notebooks/mountain_split_top_right.obj
+notebooks/mountain_split_top_left.obj
