@@ -39,3 +39,6 @@ scenes/scene2/Histogram_Columns_quadrant_neg_X_neg_Y.obj
 scenes/scene2/mountain_quadrant_nw.obj
 scenes/scene2/mountain_split_top_right.obj
 scenes/scene2/models/Histogram_Columns_quadrant_neg_X_neg_Y.obj
+blender/histogram_quadrants/Histogram_Columns.obj
+notebooks/Quad1.obj
+*.blend1
