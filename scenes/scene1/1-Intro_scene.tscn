@@ -1,9 +1,9 @@
 [gd_scene load_steps=20 format=3 uid="uid://wt8fw3kpgr2i"]
 
-[ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/ground_color.gd" id="1_locir"]
-[ext_resource type="ArrayMesh" uid="uid://buwqe7r7qap4b" path="res://models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
-[ext_resource type="ArrayMesh" uid="uid://dpr1slu3spfsp" path="res://models/Zeppelin/Zeppelin.obj" id="3_iu64i"]
-[ext_resource type="Script" uid="uid://cg7j1bjfn3hpe" path="res://scripts/animation_controller.gd" id="4_llk0s"]
+[ext_resource type="Script" uid="uid://dxno84r3ffghx" path="res://scripts/scene1/ground_color.gd" id="1_locir"]
+[ext_resource type="ArrayMesh" uid="uid://d13fq3hych1vr" path="res://assets/scene1/models/mountain_histogram_40x40_godot.obj" id="2_iu64i"]
+[ext_resource type="ArrayMesh" uid="uid://bqxy6lqqlc4k7" path="res://assets/scene1/models/Zeppelin/Zeppelin.obj" id="3_iu64i"]
+[ext_resource type="Script" uid="uid://cg7j1bjfn3hpe" path="res://scripts/scene1/animation_controller.gd" id="4_llk0s"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2mqy1"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
