@@ -47,7 +47,7 @@ func setup_environment():
 	var environment = Environment.new()
 	
 	# Cinematic quality settings
-	environment.background_mode = Environment.
+	environment.background_mode = Environment.BG_COLOR
 	environment.background_color = Color(0.05, 0.05, 0.05)
 	
 	# Ambient light
