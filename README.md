@@ -19,3 +19,13 @@ All footage is in the Google Drive folder.
 - [ ] Scene 4
 - [ ] Scene 5
 - [ ] Scene 6
+
+## Notebook folder
+
+In this folder you can find scripts and Jupyter notebooks. 
+
+### Mountain slicing
+
+A core element of the mountain structure is that it's divided in 4 regions, forming a cross when see from above (scenes 2 and 3). Instead of using shaders, we divide the mountain obj in four parts using two orthogonal planes passing by the highest point of the mountain. Scripts:
+
+- `mountain_slice.py`, which loads the original obj and cuts it in slices, returning 4 objs

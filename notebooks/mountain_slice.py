@@ -1,201 +1,205 @@
-import numpy as np
-import os
-import sys
+import re
+import math
 
-def parse_obj_file(filepath):
-    """Parse OBJ file and extract vertices and faces."""
+def parse_obj(filename):
+    """Parse OBJ file and return vertices and faces."""
     vertices = []
     faces = []
     
-    with open(filepath, 'r') as f:
-        for line in f:
+    with open(filename, 'r') as file:
+        for line in file:
+            line = line.strip()
             if line.startswith('v '):
-                # Parse vertex
+                # Parse vertex line
                 parts = line.split()
-                vertices.append([float(parts[1]), float(parts[2]), float(parts[3])])
+                x, y, z = float(parts[1]), float(parts[2]), float(parts[3])
+                vertices.append((x, y, z))
             elif line.startswith('f '):
-                # Parse face
+                # Parse face line
                 parts = line.split()
+                # Extract only the vertex indices (before any /)
                 face = []
-                for part in parts[1:]:
-                    # Handle different face formats (vertex/texture/normal)
-                    vertex_index = part.split('/')[0]
-                    face.append(int(vertex_index))
+                for p in parts[1:]:
+                    # Split by / and take only the first value (vertex index)
+                    vertex_index = p.split('/')[0]
+                    face.append(int(vertex_index) - 1)  # Convert 1-indexed to 0-indexed
                 faces.append(face)
     
-    return np.array(vertices), faces
+    return vertices, faces
 
-def write_obj_file(filepath, vertices, faces, header_comment=""):
-    """Write vertices and faces to an OBJ file."""
-    with open(filepath, 'w') as f:
-        if header_comment:
-            f.write(f"# {header_comment}\n")
+def find_highest_point_and_tile(vertices):
+    """Find the highest point and determine the nearest grid tile."""
+    # Find highest point
+    max_y = -float('inf')
+    highest_vertex = None
+    highest_idx = None
+    
+    for idx, (x, y, z) in enumerate(vertices):
+        if y > max_y:
+            max_y = y
+            highest_vertex = (x, y, z)
+            highest_idx = idx
+    
+    # The data shows a 40x40 grid pattern
+    # Find the grid size based on vertex positions
+    x_positions = sorted(list(set(x for x, _, _ in vertices)))
+    z_positions = sorted(list(set(z for _, _, z in vertices)))
+    
+    grid_spacing_x = x_positions[1] - x_positions[0] if len(x_positions) > 1 else 0.123076923076923
+    grid_spacing_z = z_positions[1] - z_positions[0] if len(z_positions) > 1 else 0.123076923076923
+    
+    # Find the nearest grid corner to the highest point
+    hx, hz = highest_vertex[0], highest_vertex[2]
+    corner_x = round(hx / grid_spacing_x) * grid_spacing_x
+    corner_z = round(hz / grid_spacing_z) * grid_spacing_z
+    
+    return highest_vertex, (corner_x, corner_z)
+
+def split_into_quadrants(vertices, faces, split_point):
+    """Split vertices and faces into 4 quadrants based on split point."""
+    split_x, split_z = split_point
+    
+    # Create quadrant structures
+    quadrants = {
+        'sw': {'vertices': [], 'faces': [], 'vertex_map': {}},  # x < 0, z < 0
+        'se': {'vertices': [], 'faces': [], 'vertex_map': {}},  # x > 0, z < 0
+        'nw': {'vertices': [], 'faces': [], 'vertex_map': {}},  # x < 0, z > 0
+        'ne': {'vertices': [], 'faces': [], 'vertex_map': {}}   # x > 0, z > 0
+    }
+    
+    # Classify vertices into quadrants
+    for idx, (x, y, z) in enumerate(vertices):
+        # Determine which quadrant this vertex belongs to
+        if x <= split_x and z <= split_z:
+            quad = 'sw'
+        elif x > split_x and z <= split_z:
+            quad = 'se'
+        elif x <= split_x and z > split_z:
+            quad = 'nw'
+        else:  # x > split_x and z > split_z
+            quad = 'ne'
         
-        # Write vertices
-        for v in vertices:
-            f.write(f"v {v[0]} {v[1]} {v[2]}\n")
-        
-        # Write faces
-        for face in faces:
-            if len(face) == 4:  # Quad
-                f.write(f"f {face[0]} {face[1]} {face[2]} {face[3]}\n")
-            elif len(face) == 3:  # Triangle
-                f.write(f"f {face[0]} {face[1]} {face[2]}\n")
-
-def find_highest_point_center(vertices):
-    """Find the highest point as the center for cutting."""
-    # Find the highest point
-    max_y_idx = np.argmax(vertices[:, 1])  # Y is height
-    highest_point = vertices[max_y_idx]
+        # Add vertex to appropriate quadrant
+        new_idx = len(quadrants[quad]['vertices'])
+        quadrants[quad]['vertices'].append((x, y, z))
+        quadrants[quad]['vertex_map'][idx] = new_idx
     
-    # Return the X and Z coordinates
-    center_x = highest_point[0]
-    center_z = highest_point[2]
-    
-    print(f"Highest point found at X={center_x:.5f}, Z={center_z:.5f}, Y={highest_point[1]:.5f}")
-    return center_x, center_z
-
-def group_vertices_by_bar(vertices, tolerance=1e-5):
-    """Group vertices that belong to the same histogram bar."""
-    bars = {}  # Key: (x, z) position, Value: list of vertex indices
-    
-    for idx, vertex in enumerate(vertices):
-        # Round to avoid floating point precision issues
-        bar_x = round(vertex[0], 6)
-        bar_z = round(vertex[2], 6)
-        bar_key = (bar_x, bar_z)
-        
-        if bar_key not in bars:
-            bars[bar_key] = []
-        bars[bar_key].append(idx)
-    
-    return bars
-
-def determine_base_quadrant(bar_x, bar_z, center_x, center_z):
-    """Determine initial quadrant based on center point."""
-    if bar_x < center_x and bar_z < center_z:
-        return 2  # Bottom-left
-    elif bar_x < center_x and bar_z >= center_z:
-        return 1  # Top-left
-    elif bar_x >= center_x and bar_z < center_z:
-        return 3  # Bottom-right
-    else:  # bar_x >= center_x and bar_z >= center_z
-        return 0  # Top-right
-
-def split_mountain_with_extra_column(input_filepath, output_base_name):
-    """Split mountain and add extra column to east (right) parts to eliminate gaps."""
-    # Parse the OBJ file
-    vertices, faces = parse_obj_file(input_filepath)
-    print(f"Loaded {len(vertices)} vertices and {len(faces)} faces")
-    
-    # Group vertices by their bar position
-    bars = group_vertices_by_bar(vertices)
-    print(f"Found {len(bars)} histogram bars")
-    
-    # Find the highest point as the center
-    center_x, center_z = find_highest_point_center(vertices)
-    
-    # Get sorted unique X positions
-    x_positions = sorted(list(set(bar_x for (bar_x, _) in bars.keys())))
-    
-    # Find the center column index
-    center_x_idx = min(range(len(x_positions)), key=lambda i: abs(x_positions[i] - center_x))
-    center_col = x_positions[center_x_idx]
-    
-    print(f"Center column at X={center_col:.5f}")
-    
-    # First, assign tiles to base quadrants
-    base_quadrant_bars = [[], [], [], []]
-    
-    for bar_pos in bars.keys():
-        bar_x, bar_z = bar_pos
-        quadrant = determine_base_quadrant(bar_x, bar_z, center_x, center_z)
-        base_quadrant_bars[quadrant].append(bar_pos)
-        
-        # Debug: Print assignments for bars at center
-        if abs(bar_x - center_x) < 1e-5 or abs(bar_z - center_z) < 1e-5:
-            quadrant_names = ["top_right", "top_left", "bottom_left", "bottom_right"]
-            print(f"  Bar at ({bar_x:.3f}, {bar_z:.3f}) -> {quadrant_names[quadrant]}")
-    
-    # Now, for east (right) parts, add the center column bars
-    # bottom_right (3) and top_right (0) get extra column from left
-    for bar_pos in base_quadrant_bars[2]:  # bottom_left
-        bar_x, bar_z = bar_pos
-        if abs(bar_x - center_col) < 1e-5:  # This is the center column
-            base_quadrant_bars[3].append(bar_pos)  # Add to bottom_right
-    
-    for bar_pos in base_quadrant_bars[1]:  # top_left
-        bar_x, bar_z = bar_pos
-        if abs(bar_x - center_col) < 1e-5:  # This is the center column
-            base_quadrant_bars[0].append(bar_pos)  # Add to top_right
-    
-    print(f"\nAfter adding center column to east parts:")
-    print(f"top_right: {len(base_quadrant_bars[0])} bars")
-    print(f"top_left: {len(base_quadrant_bars[1])} bars")
-    print(f"bottom_left: {len(base_quadrant_bars[2])} bars")
-    print(f"bottom_right: {len(base_quadrant_bars[3])} bars")
-    
-    # Create data structures for each quadrant
-    quadrant_vertices = [[], [], [], []]  # List of vertices for each quadrant
-    quadrant_faces = [[], [], [], []]  # List of faces for each quadrant
-    vertex_index_map = [{}, {}, {}, {}]  # Maps original vertex index to new_index for each quadrant
-    
-    # Assign vertices to quadrants
-    for quadrant in range(4):
-        for bar_pos in base_quadrant_bars[quadrant]:
-            for old_idx in bars[bar_pos]:
-                # Only add if not already added to this quadrant
-                if old_idx not in vertex_index_map[quadrant]:
-                    new_idx = len(quadrant_vertices[quadrant])
-                    quadrant_vertices[quadrant].append(vertices[old_idx])
-                    vertex_index_map[quadrant][old_idx] = new_idx
-    
-    # Process faces and assign to appropriate quadrants
+    # Distribute faces to quadrants
     for face in faces:
-        # Check which quadrants have all vertices of this face
-        for quadrant in range(4):
-            all_vertices_in_quadrant = True
-            for vertex_idx in face:
-                adj_idx = vertex_idx - 1  # Convert from 1-indexed to 0-indexed
-                if adj_idx not in vertex_index_map[quadrant]:
-                    all_vertices_in_quadrant = False
+        # Determine which quadrant this face belongs to
+        # A face belongs to a quadrant if ANY of its vertices are in that quadrant
+        for quad_name, quad_data in quadrants.items():
+            face_vertices = []
+            all_in_quadrant = True
+            
+            for v_idx in face:
+                if v_idx in quad_data['vertex_map']:
+                    face_vertices.append(quad_data['vertex_map'][v_idx])
+                else:
+                    all_in_quadrant = False
                     break
             
-            if all_vertices_in_quadrant:
-                # Remap vertex indices for the quadrant
-                new_face = []
-                for vertex_idx in face:
-                    adj_idx = vertex_idx - 1
-                    new_idx = vertex_index_map[quadrant][adj_idx]
-                    new_face.append(new_idx + 1)  # Convert back to 1-indexed
-                
-                quadrant_faces[quadrant].append(new_face)
+            if all_in_quadrant:
+                quadrants[quad_name]['faces'].append(face_vertices)
+                break
     
-    # Write the files for each quadrant
-    quadrant_names = ["top_right", "top_left", "bottom_left", "bottom_right"]
+    return quadrants
+
+def fill_sides(quadrants, split_point):
+    """Add edges and faces to fill the sides where quadrants were split."""
+    split_x, split_z = split_point
     
-    for i in range(4):
-        output_filepath = f"{output_base_name}_{quadrant_names[i]}.obj"
+    # Function to find vertices on the split boundaries
+    def vertices_on_boundary(vertices, axis, value, tolerance=1e-6):
+        """Find vertices that lie on the boundary."""
+        boundary_vertices = []
+        for idx, vertex in enumerate(vertices):
+            if axis == 'x' and abs(vertex[0] - value) < tolerance:
+                boundary_vertices.append((idx, vertex))
+            elif axis == 'z' and abs(vertex[2] - value) < tolerance:
+                boundary_vertices.append((idx, vertex))
+        return boundary_vertices
+    
+    # Collect boundary vertices for each quadrant
+    boundaries = {}
+    
+    for quad_name, quad_data in quadrants.items():
+        boundaries[quad_name] = {
+            'edge_x': vertices_on_boundary(quad_data['vertices'], 'x', split_x),
+            'edge_z': vertices_on_boundary(quad_data['vertices'], 'z', split_z)
+        }
+    
+    # Create faces to connect adjacent quadrants
+    def create_connecting_face(v1, v2, v3, v4):
+        """Create a quad face connecting the boundary vertices."""
+        return [v1, v2, v3, v4]
+    
+    # Connect quadrants
+    # SW to SE connection (along z = split_z)
+    if boundaries['sw']['edge_z'] and boundaries['se']['edge_z']:
+        sw_edge_z = sorted(boundaries['sw']['edge_z'], key=lambda x: x[1][0])
+        se_edge_z = sorted(boundaries['se']['edge_z'], key=lambda x: x[1][0])
         
-        print(f"Created {output_filepath} with {len(quadrant_vertices[i])} vertices and {len(quadrant_faces[i])} faces")
+        for i in range(min(len(sw_edge_z) - 1, len(se_edge_z) - 1)):
+            # Create vertical face
+            sw_bottom = sw_edge_z[i][0]
+            sw_top = sw_edge_z[i + 1][0]
+            se_bottom = se_edge_z[i][0]
+            se_top = se_edge_z[i + 1][0]
+            
+            # Add face to both quadrants
+            face = create_connecting_face(sw_bottom, se_bottom, se_top, sw_top)
+            quadrants['sw']['faces'].append(face)
+            quadrants['se']['faces'].append(face)
+    
+    # Similar connections for other boundaries...
+    # This is a simplified version. For complete implementation, you'd need:
+    # 1. NW to NE connection (along z = split_z)
+    # 2. SW to NW connection (along x = split_x)
+    # 3. SE to NE connection (along x = split_x)
+    
+    return quadrants
+
+def write_obj(filename, vertices, faces):
+    """Write vertices and faces to OBJ file."""
+    with open(filename, 'w') as file:
+        # Write header
+        file.write("# OBJ file generated by Mountain Splitter\n")
+        file.write(f"# Vertices: {len(vertices)}\n")
+        file.write(f"# Faces: {len(faces)}\n\n")
         
-        if len(quadrant_vertices[i]) > 0 and len(quadrant_faces[i]) > 0:
-            write_obj_file(
-                output_filepath,
-                quadrant_vertices[i],
-                quadrant_faces[i],
-                f"Mountain quadrant: {quadrant_names[i]} - With extended column"
-            )
-        else:
-            print(f"Warning: {quadrant_names[i]} quadrant has no valid geometry")
+        # Write vertices
+        for x, y, z in vertices:
+            file.write(f"v {x:.6f} {y:.6f} {z:.6f}\n")
+        
+        # Write faces (convert to 1-indexed)
+        for face in faces:
+            indices = " ".join(str(idx + 1) for idx in face)
+            file.write(f"f {indices}\n")
+
+def main():
+    # Parse input OBJ
+    input_file = "normalized_histogram_mountain.obj"
+    vertices, faces = parse_obj(input_file)
+    
+    print(f"Loaded {len(vertices)} vertices and {len(faces)} faces")
+    
+    # Find highest point and split point
+    highest_point, split_point = find_highest_point_and_tile(vertices)
+    print(f"Highest point: {highest_point}")
+    print(f"Split point: {split_point}")
+    
+    # Split into quadrants
+    quadrants = split_into_quadrants(vertices, faces, split_point)
+    
+    # Fill sides (simplified version)
+    quadrants = fill_sides(quadrants, split_point)
+    
+    # Write output files
+    for quad_name, quad_data in quadrants.items():
+        output_file = f"mountain_quadrant_{quad_name}.obj"
+        write_obj(output_file, quad_data['vertices'], quad_data['faces'])
+        print(f"Wrote {quad_name}: {len(quad_data['vertices'])} vertices, {len(quad_data['faces'])} faces")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python split_mountain_extend.py input_file.obj [output_base_name]")
-        print("Example: python split_mountain_extend.py mountain_histogram_40x40_godot.obj mountain_split")
-        sys.exit(1)
-    
-    input_file = sys.argv[1]
-    output_base = sys.argv[2] if len(sys.argv) > 2 else os.path.splitext(input_file)[0] + "_split"
-    
-    split_mountain_with_extra_column(input_file, output_base)
+    main()

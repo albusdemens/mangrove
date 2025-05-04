@@ -30,3 +30,12 @@ notebooks/mountain_split_bottom_right.obj
 .gitignore
 notebooks/mountain_split_top_right.obj
 notebooks/mountain_split_top_left.obj
+blender/histogram_quadrants/Histogram_Columns_quadrant_neg_X_neg_Y.obj
+blender/histogram_quadrants/Histogram_Columns_quadrant_neg_X_pos_Y.obj
+blender/histogram_quadrants/Histogram_Columns_quadrant_pos_X_neg_Y.obj
+blender/histogram_quadrants/Histogram_Columns_quadrant_pos_X_pos_Y.obj
+blender/normalized_histogram_slice_1.obj
+scenes/scene2/Histogram_Columns_quadrant_neg_X_neg_Y.obj
+scenes/scene2/mountain_quadrant_nw.obj
+scenes/scene2/mountain_split_top_right.obj
+scenes/scene2/models/Histogram_Columns_quadrant_neg_X_neg_Y.obj
