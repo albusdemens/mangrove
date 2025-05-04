@@ -42,3 +42,11 @@ scenes/scene2/models/Histogram_Columns_quadrant_neg_X_neg_Y.obj
 blender/histogram_quadrants/Histogram_Columns.obj
 notebooks/Quad1.obj
 *.blend1
+notebooks/Histogram_Columns_quadrant_neg_X_neg_Y.obj
+notebooks/histogram_fixed.obj
+notebooks/histogram_godot.obj
+notebooks/histogram_part_0.obj
+notebooks/histogram_part_1.obj
+notebooks/test.obj
+scenes/scene2/histogram_split.obj
+scenes/scene2/models/histogram_godot.obj
