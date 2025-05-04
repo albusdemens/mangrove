@@ -26,6 +26,7 @@ In this folder you can find scripts and Jupyter notebooks.
 
 ### Mountain slicing
 
-A core element of the mountain structure is that it's divided in 4 regions, forming a cross when see from above (scenes 2 and 3). Instead of using shaders, we divide the mountain obj in four parts using two orthogonal planes passing by the highest point of the mountain. Scripts:
+A core element of the mountain structure is that it's divided in 4 regions, forming a cross when see from above (scenes 2 and 3). Instead of using shaders, we divide the mountain obj in four parts using two orthogonal planes passing by the highest point of the mountain. Steps:
 
-- `mountain_slice.py`, which loads the original obj and cuts it in slices, returning 4 objs
+- In Blender, load and select the mountain obj and then run `mountain_cutting.blend`. This will generate 4 obj files
+- 
