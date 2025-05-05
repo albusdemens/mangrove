@@ -1,9 +1,10 @@
-[gd_scene load_steps=32 format=3 uid="uid://cosyiat2w302h"]
+[gd_scene load_steps=33 format=3 uid="uid://cosyiat2w302h"]
 
 [ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
 [ext_resource type="Script" uid="uid://nhmdn12qv0v8" path="res://scripts/player_1.gd" id="2_d1q0w"]
 [ext_resource type="ArrayMesh" uid="uid://lv2us2otgur2" path="res://assets/dandelions.obj" id="2_irm7l"]
 [ext_resource type="Script" uid="uid://cktypxn05l6fx" path="res://scripts/CollectibleResource.gd" id="4_5ktjh"]
+[ext_resource type="Script" uid="uid://bsqjenh8egmg8" path="res://scripts/planting_manager.gd" id="5_7mgta"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wrdne"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -214,7 +215,7 @@ script = ExtResource("4_5ktjh")
 [node name="StaticBody3D" type="StaticBody3D" parent="Dandelions2"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions2/StaticBody3D"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_7mgta")
 
 [node name="Dandelions3" type="MeshInstance3D" parent="."]
@@ -249,3 +250,6 @@ script = ExtResource("4_5ktjh")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions5/StaticBody3D"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_dp8vw")
+
+[node name="PlantingManager" type="Node3D" parent="."]
+script = ExtResource("5_7mgta")

@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-var move_speed = 2
+var move_speed = 1
 var total_points = 0
 var can_collect_crystals = false  # Player 1 cannot collect crystals
 
@@ -12,7 +12,7 @@ func _ready():
 	collision_layer = 1  # Players layer
 	collision_mask = 7   # Collide with all layers
 
-func _physics_process(_delta):
+func _physics_process(_delta):  # Fixed: underscore instead of asterisks
 	# Get input
 	var input = Vector3.ZERO
 	if Input.is_action_pressed("move_forward"): input.z -= 1
@@ -25,12 +25,12 @@ func _physics_process(_delta):
 	linear_velocity.z = input.z * move_speed
 
 # This function is called by the CollectibleResource script
-func collect_resource(_points, is_crystal):  # Added underscore to _points
-	if is_crystal and not can_collect_crystals:
+func collect_resource(points, is_crystal):
+	# Player 1 cannot collect crystals, only flowers
+	if is_crystal:
 		print("Player 1 cannot collect crystals!")
-		return
+		return  # Do nothing with crystals
 	
-	# Collecting flowers
-	if not is_crystal:
-		total_points += 10  # All flowers give 10 points
-		print("Flower collected! Total points: ", total_points)
+	# Only collect flowers
+	total_points += points
+	print("Player 1 collected flower! Total points: " + str(total_points))
