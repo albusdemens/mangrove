@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cug5mqex7xeyf"]
+
+[ext_resource type="Script" uid="uid://cw8wgdyiji5w" path="res://scripts/scene2/CharacterMovement.gd" id="1_dphse"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_dphse"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xcqe1"]
+albedo_color = Color(0.917647, 0.188235, 0, 1)
+
+[node name="CharacterTorus" type="CharacterBody3D"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+script = ExtResource("1_dphse")
+
+[node name="TorusMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_dphse")
+surface_material_override/0 = SubResource("StandardMaterial3D_xcqe1")
