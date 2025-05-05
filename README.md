@@ -39,3 +39,4 @@ A core element of the mountain structure is that it's divided in 4 regions, form
 
 Scale of the players: 0.1
 Scale of the gems: 0.5 
+Scale of the flowers: 0.75

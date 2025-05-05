@@ -1,17 +1,18 @@
-extends CharacterBody3D
+# Player1.gd
+extends RigidBody3D
 
-var speed = 5.0
+var total_points = 0
+var can_collect_crystals = false  # Player 1 CANNOT collect crystals
 
-func _physics_process(delta):
-	# Get input
-	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+func _ready():
+	collision_layer = 1  # Players layer
+	collision_mask = 7   # Collide with all layers
+	lock_rotation = true
+
+func collect_resource(points, is_crystal):
+	if is_crystal and not can_collect_crystals:
+		print("Player 1 cannot collect crystals!")
+		return  # Do nothing
 	
-	# Apply movement
-	velocity.x = input_dir.x * speed
-	velocity.z = input_dir.y * speed
-	
-	# Apply gravity
-	velocity.y -= 9.8 * delta
-	
-	# Move
-	move_and_slide()
+	total_points += points
+	print("Player 1 collected dandelion! Total: ", total_points)
