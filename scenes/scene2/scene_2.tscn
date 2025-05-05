@@ -9,13 +9,13 @@ sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
 ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
 ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
 
-[sub_resource type="Sky" id="Sky_oq54p"]
+[sub_resource type="Sky" id="Sky_ogt5y"]
 sky_material = SubResource("ProceduralSkyMaterial_ogt5y")
 
 [sub_resource type="Environment" id="Environment_8dwar"]
 background_mode = 2
 background_color = Color(0.780392, 0.262745, 0, 1)
-sky = SubResource("Sky_oq54p")
+sky = SubResource("Sky_ogt5y")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3r24c"]
 shading_mode = 2

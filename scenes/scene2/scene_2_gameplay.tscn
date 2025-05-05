@@ -1,0 +1,184 @@
+[gd_scene load_steps=23 format=3 uid="uid://cosyiat2w302h"]
+
+[ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
+[ext_resource type="Script" uid="uid://nhmdn12qv0v8" path="res://scripts/player_1.gd" id="2_d1q0w"]
+[ext_resource type="ArrayMesh" uid="uid://lv2us2otgur2" path="res://assets/dandelions.obj" id="2_irm7l"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wrdne"]
+sky_top_color = Color(1, 0.960784, 0.619608, 1)
+sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
+ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
+ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="Sky" id="Sky_ogt5y"]
+sky_material = SubResource("ProceduralSkyMaterial_wrdne")
+
+[sub_resource type="Environment" id="Environment_jehat"]
+background_mode = 2
+background_color = Color(0.780392, 0.262745, 0, 1)
+sky = SubResource("Sky_ogt5y")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wrdne"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jehat"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ktjh"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mgta"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pksu1"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lonr1"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dp8vw"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tt7hj"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bx8yh"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k0xh4"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mjh4l"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjg02"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_irm7l"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d1q0w"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c6rhq"]
+albedo_color = Color(0.619608, 0.101961, 0.101961, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gn022"]
+
+[node name="scene_2_gameplay" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_jehat")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 1.99827, 3.36405)
+current = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, 1, 0, 0, 0, 5, -0.0366786, -0.355517, 0)
+use_collision = true
+size = Vector3(0.836182, 1, 1)
+material = SubResource("StandardMaterial3D_wrdne")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 3, 0, 0, 0, 3, 0.276703, 0, 0)
+use_collision = true
+material = SubResource("StandardMaterial3D_jehat")
+
+[node name="Crystal" type="MeshInstance3D" parent="CSGBox3D2"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.0709631, 1.615, 1.29742)
+mesh = ExtResource("1_jehat")
+surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
+surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
+surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
+surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
+surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
+surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
+surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
+surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
+surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
+surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 2, 0, 0, 0, 1, 0.596316, -0.108398, 0.556862)
+use_collision = true
+size = Vector3(2.65631, 1, 1)
+material = SubResource("StandardMaterial3D_irm7l")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2.33612, 3.65269)
+
+[node name="Player1" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+lock_rotation = true
+script = ExtResource("2_d1q0w")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player1"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("BoxMesh_d1q0w")
+surface_material_override/0 = SubResource("StandardMaterial3D_c6rhq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player1"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_gn022")
+
+[node name="Crystal" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.071, 1.55, 1.297)
+mesh = ExtResource("1_jehat")
+surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
+surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
+surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
+surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
+surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
+surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
+surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
+surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
+surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
+surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
+
+[node name="Crystal2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.845, 1.55, 0.14)
+mesh = ExtResource("1_jehat")
+surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
+surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
+surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
+surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
+surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
+surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
+surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
+surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
+surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
+surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
+
+[node name="Crystal3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.0273562, 0.208347, 1.84164)
+mesh = ExtResource("1_jehat")
+surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
+surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
+surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
+surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
+surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
+surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
+surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
+surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
+surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
+surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
+
+[node name="Dandelions" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.537368, 1.59882, 1.08076)
+mesh = ExtResource("2_irm7l")
+
+[node name="Dandelions2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539036, 1.59882, 0.950711)
+mesh = ExtResource("2_irm7l")
+
+[node name="Dandelions3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539036, 1.59882, 1.1978)
+mesh = ExtResource("2_irm7l")
+
+[node name="Dandelions4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539036, 1.59882, 1.3236)
+mesh = ExtResource("2_irm7l")
+
+[node name="Dandelions5" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.600643, 0, -0.449142, 0, 0.75, 0, 0.449142, 0, 0.600643, 0.93311, 0.198862, 1.74848)
+mesh = ExtResource("2_irm7l")
