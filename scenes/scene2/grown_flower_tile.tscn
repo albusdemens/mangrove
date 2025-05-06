@@ -1,0 +1,54 @@
+[gd_scene load_steps=6 format=3 uid="uid://bauldn1av1b5f"]
+
+[ext_resource type="ArrayMesh" uid="uid://lv2us2otgur2" path="res://assets/dandelions.obj" id="1_hulo8"]
+
+[sub_resource type="GDScript" id="GDScript_tnxvr"]
+script/source = "extends Node3D
+
+signal collected
+
+# Configure flower properties
+@export var points = 10
+@export var is_crystal = false
+
+func _ready():
+	# Area3D is already included in the scene so we don't need to create it
+	pass
+
+func _on_area_3d_body_entered(body):
+	if body.has_method(\"collect_resource\"):
+		body.collect_resource(points, is_crystal)
+		emit_signal(\"collected\")  # Emit signal for gameplay script
+		queue_free()  # Remove the flower
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hulo8"]
+albedo_color = Color(0.619608, 0.101961, 0.101961, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hulo8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tk8uq"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[node name="flower_tile" type="Node3D"]
+script = SubResource("GDScript_tnxvr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.0724653, 0)
+mesh = ExtResource("1_hulo8")
+surface_material_override/0 = SubResource("StandardMaterial3D_hulo8")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_hulo8")
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.100744, 0)
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_tk8uq")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

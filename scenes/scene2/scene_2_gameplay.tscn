@@ -1,10 +1,10 @@
 [gd_scene load_steps=33 format=3 uid="uid://cosyiat2w302h"]
 
+[ext_resource type="Script" uid="uid://boq7b5130sg38" path="res://scripts/scene_2_gameplay.gd" id="1_7mgta"]
 [ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
 [ext_resource type="Script" uid="uid://nhmdn12qv0v8" path="res://scripts/player_1.gd" id="2_d1q0w"]
 [ext_resource type="ArrayMesh" uid="uid://lv2us2otgur2" path="res://assets/dandelions.obj" id="2_irm7l"]
 [ext_resource type="Script" uid="uid://cktypxn05l6fx" path="res://scripts/CollectibleResource.gd" id="4_5ktjh"]
-[ext_resource type="Script" uid="uid://bsqjenh8egmg8" path="res://scripts/planting_manager.gd" id="5_7mgta"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wrdne"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -83,6 +83,8 @@ albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dp8vw"]
 
 [node name="scene_2_gameplay" type="Node3D"]
+script = ExtResource("1_7mgta")
+metadata/movie_file = &"res://output_video.avi"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_jehat")
@@ -197,18 +199,18 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 shape = SubResource("CylinderShape3D_pksu1")
 
 [node name="Dandelions" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.537368, 1.59882, 1.08076)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.537, 1.599, 0.8)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Dandelions"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions/StaticBody3D"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_5ktjh")
 
 [node name="Dandelions2" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539036, 1.59882, 0.950711)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.599, 1)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
 
@@ -219,25 +221,25 @@ transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_7mgta")
 
 [node name="Dandelions3" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539036, 1.59882, 1.1978)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.599, 1.2)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Dandelions3"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions3/StaticBody3D"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_pksu1")
 
 [node name="Dandelions4" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539036, 1.59882, 1.3236)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.599, 1.4)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Dandelions4"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions4/StaticBody3D"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_lonr1")
 
 [node name="Dandelions5" type="MeshInstance3D" parent="."]
@@ -248,8 +250,7 @@ script = ExtResource("4_5ktjh")
 [node name="StaticBody3D" type="StaticBody3D" parent="Dandelions5"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions5/StaticBody3D"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_dp8vw")
 
-[node name="PlantingManager" type="Node3D" parent="."]
-script = ExtResource("5_7mgta")
+[node name="GridMap" type="GridMap" parent="."]

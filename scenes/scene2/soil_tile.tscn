@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bulgs0r6iweyv"]
+
+[ext_resource type="ArrayMesh" uid="uid://c5vkk0h8bhxbh" path="res://assets/fertile_soil.obj" id="1_n2wai"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lm3os"]
+size = Vector3(1, 0.331787, 1)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+mesh = ExtResource("1_n2wai")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.120483, 0)
+shape = SubResource("BoxShape3D_lm3os")

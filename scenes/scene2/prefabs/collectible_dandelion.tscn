@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/scene2/scripts/CollectibleResource.gd" id="1_jex2q"]
+[ext_resource type="ArrayMesh" path="res://scenes/scene2/assets/dandelions.obj" id="2_3xnfp"]
+
+[node name="CollectibleDandelion" type="Node3D"]
+script = ExtResource("1_jex2q")
+points = 10
+is_crystal = false
+
+[node name="DandelionMesh" type="MeshInstance3D" parent="."]
+mesh = ExtResource("2_3xnfp")
