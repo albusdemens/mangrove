@@ -5,6 +5,32 @@ var total_points = 0
 var can_collect_crystals = false  # Player 1 cannot collect crystals
 var seed_count = 5  # Starting with 5 seeds
 
+# Fishing-related variables
+var is_in_fishing_zone = false
+var is_fishing = false
+var fishing_distance = 20.0  # Maximum fishing distance (increased to reach floor)
+var fishing_speed = 5.0  # Speed at which line is cast
+var retrieval_speed = 1.0  # Speed at which fish/flowers are retrieved (1/sec as requested)
+var current_fishing_depth = 0.0
+var fishing_rod
+var fishing_line
+var rod_tip
+var fishing_prompt
+var has_fishing_rod_setup = false
+var rod_visible = false  # Track rod visibility state
+var caught_resource = null  # Reference to caught resource
+var is_retrieving = false  # Whether we're bringing up a caught resource
+
+# States for the fishing process
+enum FishingState {
+	IDLE,       # Not fishing
+	CASTING,    # Line going down
+	WAITING,    # Line at bottom waiting for fish
+	HOOKED,     # Fish/flower caught
+	RETRIEVING  # Bringing up the catch
+}
+var fishing_state = FishingState.IDLE
+
 func _ready():
 	contact_monitor = true
 	max_contacts_reported = 10
@@ -18,8 +44,16 @@ func _ready():
 	# Debug log to confirm player is ready
 	print("Player 1 ready with " + str(seed_count) + " seeds.")
 	
+	# Find and set fishing prompt
+	fishing_prompt = get_node_or_null("/root/scene_2_gameplay/UI/FishingPrompt")
+	if not fishing_prompt:
+		print("Warning: Fishing prompt UI not found!")
+	
 	# Defer the node search until the next frame when we're guaranteed to be in the tree
 	call_deferred("_find_planting_manager")
+	
+	# Set up the fishing rod but keep it hidden
+	call_deferred("setup_fishing_system")
 
 # Called after _ready via call_deferred to ensure we're in the scene tree
 func _find_planting_manager():
@@ -41,7 +75,7 @@ func _find_planting_manager():
 	else:
 		print("WARNING: Could not find PlantingManager!")
 
-func _physics_process(_delta):
+func _physics_process(delta):
 	# Get input
 	var input = Vector3.ZERO
 	if Input.is_action_pressed("move_forward"): input.z -= 1
@@ -52,6 +86,30 @@ func _physics_process(_delta):
 	# Instant horizontal movement, preserve vertical velocity for gravity
 	linear_velocity.x = input.x * move_speed
 	linear_velocity.z = input.z * move_speed
+	
+	# Handle fishing rod visibility and fishing actions
+	if has_fishing_rod_setup and fishing_rod != null:
+		# Toggle rod visibility when Enter is pressed
+		if Input.is_action_just_pressed("ui_accept"):
+			rod_visible = !rod_visible
+			fishing_rod.visible = rod_visible
+			print("Rod visibility toggled to: ", rod_visible)
+			
+			# If rod is hidden, stop fishing
+			if !rod_visible and is_fishing:
+				stop_fishing()
+		
+		# Cast fishing line with right mouse button when rod is visible
+		if rod_visible and Input.is_action_just_pressed("ui_cancel"):  # Right mouse button is mapped to ui_cancel by default
+			if fishing_state == FishingState.IDLE:
+				start_fishing()
+			else:
+				# If already fishing, right-click will reel in the line
+				retract_fishing_line()
+	
+	# Update fishing if active
+	if is_fishing:
+		update_fishing(delta)
 
 # This function is called by the CollectibleResource script
 func collect_resource(points, is_crystal):
@@ -79,3 +137,239 @@ func use_seed_for_planting():
 func use_flower_for_planting():
 	# We could implement this if flowers can be planted
 	pass
+
+# Fishing system setup function
+func setup_fishing_system():
+	# Get the existing fishing rod that's already in the scene
+	fishing_rod = $FishingRod
+	if fishing_rod == null:
+		print("ERROR: Couldn't find the FishingRod node!")
+		return
+		
+	# Get the rod tip marker node
+	rod_tip = fishing_rod.get_node("RodTip")
+	if rod_tip == null:
+		print("ERROR: Couldn't find the RodTip node!")
+		return
+		
+	# Create fishing line if it doesn't exist
+	fishing_line = rod_tip.get_node_or_null("FishingLine")
+	if fishing_line == null:
+		fishing_line = MeshInstance3D.new()
+		fishing_line.name = "FishingLine"
+		rod_tip.add_child(fishing_line)
+	
+	# Make sure rod is hidden initially
+	fishing_rod.visible = false
+	rod_visible = false
+	
+	has_fishing_rod_setup = true
+	print("Fishing system set up successfully! Using existing FishingRod from scene.")
+
+# Update fishing line visual
+func update_fishing_line(start_pos, end_pos):
+	# Create or update a simple line mesh
+	var line_mesh = ImmediateMesh.new()
+	
+	# Create material if needed
+	if not fishing_line.material_override:
+		var line_material = StandardMaterial3D.new()
+		line_material.albedo_color = Color(0.9, 0.9, 0.9)  # White-ish
+		line_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		fishing_line.material_override = line_material
+	
+	# Create line
+	line_mesh.clear_surfaces()
+	line_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+	line_mesh.surface_add_vertex(start_pos)
+	line_mesh.surface_add_vertex(end_pos)
+	line_mesh.surface_end()
+	
+	# Apply mesh
+	fishing_line.mesh = line_mesh
+
+# Called when player enters a fishing zone
+func enter_fishing_zone():
+	is_in_fishing_zone = true
+	if fishing_prompt:
+		fishing_prompt.visible = true
+	print("Entered fishing zone")
+
+# Called when player exits a fishing zone
+func exit_fishing_zone():
+	is_in_fishing_zone = false
+	if fishing_prompt:
+		fishing_prompt.visible = false
+	
+	if is_fishing:
+		stop_fishing()
+	print("Exited fishing zone")
+
+# Start fishing action
+func start_fishing():
+	is_fishing = true
+	current_fishing_depth = 0.0
+	fishing_state = FishingState.CASTING
+	caught_resource = null
+	is_retrieving = false
+	
+	# Make sure rod is visible when fishing
+	if has_fishing_rod_setup and fishing_rod != null:
+		rod_visible = true
+		fishing_rod.visible = true
+		print("Started fishing! Rod visibility: ", fishing_rod.visible)
+	
+	if fishing_prompt:
+		fishing_prompt.visible = false
+
+# Update fishing state each frame
+func update_fishing(delta):
+	match fishing_state:
+		FishingState.CASTING:
+			# Extend line downward
+			if current_fishing_depth < fishing_distance:
+				current_fishing_depth += fishing_speed * delta
+				
+				# Update line visual
+				update_fishing_line(Vector3.ZERO, Vector3(0, -current_fishing_depth, 0))
+				
+				# Get global end position for resource detection
+				var global_end = rod_tip.global_position + Vector3(0, -current_fishing_depth, 0)
+				
+				# Check for collisions at line end
+				check_for_collisions(global_end)
+			else:
+				# Reached maximum distance, switch to waiting state
+				fishing_state = FishingState.WAITING
+				print("Line fully extended, waiting for fish...")
+				
+		FishingState.WAITING:
+			# Keep the line extended, periodically check for fish
+			var global_end = rod_tip.global_position + Vector3(0, -current_fishing_depth, 0)
+			check_for_collisions(global_end)
+			
+		FishingState.HOOKED:
+			# Switch to retrieving state and start animation
+			fishing_state = FishingState.RETRIEVING
+			retrieve_catch()
+			
+		FishingState.RETRIEVING:
+			# Gradual retrieval is handled by the tween in retrieve_catch()
+			pass
+
+# Check for collisions with floor and fishable resources
+func check_for_collisions(target_position):
+	# Create physics query
+	var space_state = get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(
+		rod_tip.global_position,
+		target_position
+	)
+	
+	var result = space_state.intersect_ray(query)
+	if result:
+		if result.collider.is_in_group("fishable_resource"):
+			print("Found fishable resource!")
+			caught_resource = result.collider
+			fishing_state = FishingState.HOOKED
+		elif fishing_state == FishingState.CASTING:
+			# Hit something (like the floor) while casting
+			print("Line hit something (floor or object).")
+			fishing_state = FishingState.WAITING
+			current_fishing_depth = rod_tip.global_position.distance_to(result.position)
+			update_fishing_line(Vector3.ZERO, Vector3(0, -current_fishing_depth, 0))
+
+# Retrieve the caught resource with a slow animation
+func retrieve_catch():
+	if caught_resource:
+		print("Retrieving the catch!")
+		
+		# Create a tween to animate retrieval at 1 unit per second
+		var tween = create_tween().set_ease(Tween.EASE_OUT)
+		
+		# Calculate how long retrieval should take at retrieval_speed
+		var retrieval_time = current_fishing_depth / retrieval_speed
+		
+		# Animate line retraction
+		tween.tween_method(Callable(self, "_update_retrieval"), current_fishing_depth, 0.0, retrieval_time)
+		
+		# Move caught resource along with the line
+		if caught_resource:
+			var start_pos = caught_resource.global_position
+			var end_pos = rod_tip.global_position
+			
+			# Function to update resource position during retrieval
+			var update_resource_pos = func(t: float):
+				if is_instance_valid(caught_resource):
+					caught_resource.global_position = start_pos.lerp(end_pos, t)
+			
+			# Add another track to move the resource
+			tween.parallel().tween_method(update_resource_pos, 0.0, 1.0, retrieval_time)
+		
+		# When complete, collect the resource and reset
+		tween.tween_callback(Callable(self, "_finish_collection"))
+
+# Update during retrieval animation
+func _update_retrieval(depth):
+	current_fishing_depth = depth
+	update_fishing_line(Vector3.ZERO, Vector3(0, -depth, 0))
+
+# Called when retrieval animation finishes
+func _finish_collection():
+	if is_instance_valid(caught_resource):
+		# Collect the resource
+		if caught_resource.has_method("collect"):
+			caught_resource.collect(self)
+		else:
+			collect_fishable_resource(caught_resource)
+	
+	# Reset fishing state
+	fishing_state = FishingState.IDLE
+	caught_resource = null
+	is_retrieving = false
+	stop_fishing()
+
+# Collect a resource caught with fishing rod
+func collect_fishable_resource(resource):
+	print("Caught a resource with fishing rod!")
+	
+	# Use your existing collection logic
+	if resource.has_method("collect"):
+		resource.collect(self)
+	else:
+		# Fallback direct collection
+		seed_count += 1
+		print("Fished a resource! Seeds: " + str(seed_count))
+		
+		# Remove the resource
+		resource.queue_free()
+
+# Retract fishing line animation
+func retract_fishing_line():
+	if fishing_state == FishingState.RETRIEVING:
+		return # Don't interrupt an ongoing retrieval
+		
+	# Create a tween to animate line retraction
+	var tween = create_tween()
+	tween.tween_method(Callable(self, "_update_retract"), current_fishing_depth, 0.0, 0.5) # Faster retraction when manual
+	tween.tween_callback(Callable(self, "stop_fishing"))
+
+# Update during retraction animation
+func _update_retract(depth):
+	current_fishing_depth = depth
+	update_fishing_line(Vector3.ZERO, Vector3(0, -depth, 0))
+
+# Stop fishing and clean up
+func stop_fishing():
+	is_fishing = false
+	fishing_state = FishingState.IDLE
+	
+	# Clear fishing line
+	if fishing_line and fishing_line.mesh:
+		fishing_line.mesh.clear_surfaces()
+	
+	# Show prompt if still in zone
+	if is_in_fishing_zone and fishing_prompt:
+		fishing_prompt.visible = true
+		
+	print("Stopped fishing! Rod visibility remains: ", fishing_rod.visible)

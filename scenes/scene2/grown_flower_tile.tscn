@@ -10,16 +10,29 @@ signal collected
 # Configure flower properties
 @export var points = 10
 @export var is_crystal = false
+@export var is_fishable = true  # Make the flower fishable
 
 func _ready():
-	# Area3D is already included in the scene so we don't need to create it
-	pass
+	# Add to fishable resource group so fishing line can detect it
+	add_to_group(\"fishable_resource\")
+	print(\"Flower added to fishable_resource group\")
 
 func _on_area_3d_body_entered(body):
 	if body.has_method(\"collect_resource\"):
 		body.collect_resource(points, is_crystal)
 		emit_signal(\"collected\")  # Emit signal for gameplay script
 		queue_free()  # Remove the flower
+
+# This will allow the flower to be caught when fishing
+func can_be_fished():
+	return is_fishable
+
+# Called by the fishing system when the flower is caught
+func collect(collector):
+	if collector.has_method(\"collect_resource\"):
+		collector.collect_resource(points, is_crystal)
+		emit_signal(\"collected\")
+		queue_free()
 "
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hulo8"]

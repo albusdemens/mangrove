@@ -1,9 +1,10 @@
-[gd_scene load_steps=33 format=3 uid="uid://cosyiat2w302h"]
+[gd_scene load_steps=36 format=3 uid="uid://cosyiat2w302h"]
 
 [ext_resource type="Script" uid="uid://boq7b5130sg38" path="res://scripts/scene_2_gameplay.gd" id="1_7mgta"]
 [ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
 [ext_resource type="Script" uid="uid://nhmdn12qv0v8" path="res://scripts/player_1.gd" id="2_d1q0w"]
 [ext_resource type="ArrayMesh" uid="uid://lv2us2otgur2" path="res://assets/dandelions.obj" id="2_irm7l"]
+[ext_resource type="Script" uid="uid://chulycy0f765h" path="res://scripts/fishing_zone.gd" id="2_pksu1"]
 [ext_resource type="Script" uid="uid://cktypxn05l6fx" path="res://scripts/CollectibleResource.gd" id="4_5ktjh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wrdne"]
@@ -26,6 +27,8 @@ albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jehat"]
 albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_lonr1"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_irm7l"]
 albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 
@@ -35,6 +38,8 @@ albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 albedo_color = Color(0.619608, 0.101961, 0.101961, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gn022"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pksu1"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ktjh"]
 albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
@@ -104,6 +109,13 @@ transform = Transform3D(2, 0, 0, 0, 3, 0, 0, 0, 3, 0.276703, 0, 0)
 use_collision = true
 material = SubResource("StandardMaterial3D_jehat")
 
+[node name="FishingZone" type="Area3D" parent="CSGBox3D2"]
+transform = Transform3D(3, 0, 0, 0, 1.01, 0, 0, 0, 0.02, 0, 0, 0.491148)
+script = ExtResource("2_pksu1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CSGBox3D2/FishingZone"]
+shape = SubResource("BoxShape3D_lonr1")
+
 [node name="CSGBox3D3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 2, 0, 0, 0, 1, 0.596316, -0.108398, 0.556862)
 use_collision = true
@@ -129,8 +141,19 @@ surface_material_override/0 = SubResource("StandardMaterial3D_c6rhq")
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 shape = SubResource("BoxShape3D_gn022")
 
+[node name="FishingRod" type="Node3D" parent="Player1"]
+transform = Transform3D(1, 0, 0, 0, 0.906308, -0.422618, 0, 0.422618, 0.906308, 0, 0, 0.265986)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player1/FishingRod"]
+transform = Transform3D(0.025, 0, 0, 0, 0.248192, -0.00300126, 0, 0.0300126, 0.0248192, 0.0598988, 0.128247, -0.217751)
+mesh = SubResource("CylinderMesh_pksu1")
+
+[node name="RodTip" type="Marker3D" parent="Player1/FishingRod"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
+
 [node name="Crystal" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.071, 1.55, 1.297)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.071, 1.55, 0.95)
 mesh = ExtResource("1_jehat")
 surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
 surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
@@ -232,7 +255,7 @@ transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_pksu1")
 
 [node name="Dandelions4" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.599, 1.4)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.599, 0.6)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
 
