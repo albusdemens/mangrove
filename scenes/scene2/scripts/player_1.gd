@@ -9,7 +9,7 @@ var seed_count = 5  # Starting with 5 seeds
 var is_in_fishing_zone = false
 var is_fishing = false
 var fishing_distance = 20.0  # Maximum fishing distance (increased to reach floor)
-var fishing_speed = 5.0  # Speed at which line is cast
+var fishing_speed = 2.0  # Speed at which line is cast
 var retrieval_speed = 1.0  # Speed at which fish/flowers are retrieved (1/sec as requested)
 var current_fishing_depth = 0.0
 var fishing_rod
@@ -20,6 +20,7 @@ var has_fishing_rod_setup = false
 var rod_visible = false  # Track rod visibility state
 var caught_resource = null  # Reference to caught resource
 var is_retrieving = false  # Whether we're bringing up a caught resource
+var fishing_bobber = null  # Physics-based bobber at end of line
 
 # States for the fishing process
 enum FishingState {
@@ -100,7 +101,7 @@ func _physics_process(delta):
 				stop_fishing()
 		
 		# Cast fishing line with right mouse button when rod is visible
-		if rod_visible and Input.is_action_just_pressed("ui_cancel"):  # Right mouse button is mapped to ui_cancel by default
+		if rod_visible and Input.is_action_just_pressed("fish_line"):  # Using our new fish_cast input action
 			if fishing_state == FishingState.IDLE:
 				start_fishing()
 			else:
@@ -159,6 +160,49 @@ func setup_fishing_system():
 		fishing_line.name = "FishingLine"
 		rod_tip.add_child(fishing_line)
 	
+	# Create fishing bobber if it doesn't exist
+	fishing_bobber = rod_tip.get_node_or_null("FishingBobber")
+	if fishing_bobber == null:
+		# Create a RigidBody3D for the bobber with physics
+		fishing_bobber = RigidBody3D.new()
+		fishing_bobber.name = "FishingBobber"
+		fishing_bobber.gravity_scale = 6.0  # Make it even heavier for faster, straighter descent
+		fishing_bobber.mass = 3.0  # Add more mass to fall straighter
+		fishing_bobber.linear_damp = 1.0  # Less damping for faster movement
+		fishing_bobber.lock_rotation = true  # Prevent rotation
+		fishing_bobber.collision_layer = 0  # Don't collide with player
+		fishing_bobber.collision_mask = 1   # Only collide with environment
+		get_tree().root.add_child(fishing_bobber)  # Add to root to make physics work properly
+		
+		# Add mesh to visualize the bobber
+		var bobber_mesh = MeshInstance3D.new()
+		bobber_mesh.name = "BobberMesh"
+		fishing_bobber.add_child(bobber_mesh)
+		
+		# Create sphere mesh for the bobber - MUCH smaller now (1/10 size)
+		var sphere = SphereMesh.new()
+		sphere.radius = 0.02  # 1/10 the previous size
+		sphere.height = 0.04
+		bobber_mesh.mesh = sphere
+		
+		# Add material to the bobber - brighter color for better visibility
+		var bobber_material = StandardMaterial3D.new()
+		bobber_material.albedo_color = Color(1.0, 0.0, 0.0)  # Bright red color
+		bobber_material.emission_enabled = true  # Make it glow
+		bobber_material.emission = Color(1.0, 0.0, 0.0, 0.8)
+		bobber_material.emission_energy = 0.5
+		bobber_mesh.material_override = bobber_material
+		
+		# Add collision shape - keep collision shape a bit larger than visual
+		var collision = CollisionShape3D.new()
+		var sphere_shape = SphereShape3D.new()
+		sphere_shape.radius = 0.05  # Collision slightly larger than visual
+		collision.shape = sphere_shape
+		fishing_bobber.add_child(collision)
+		
+		# Make it initially invisible
+		fishing_bobber.visible = false
+	
 	# Make sure rod is hidden initially
 	fishing_rod.visible = false
 	rod_visible = false
@@ -166,28 +210,76 @@ func setup_fishing_system():
 	has_fishing_rod_setup = true
 	print("Fishing system set up successfully! Using existing FishingRod from scene.")
 
-# Update fishing line visual
-func update_fishing_line(start_pos, end_pos):
-	# Create or update a simple line mesh
+# Update fishing line visual to connect rod tip to bobber with proper physics
+func update_fishing_line():
+	if !fishing_bobber || !rod_tip:
+		return
+		
+	# Get the start (rod tip) and end (bobber) positions in local space
+	var start_pos = Vector3.ZERO  # Rod tip is the reference point (local space)
+	var end_pos = fishing_bobber.global_position - rod_tip.global_position  # Convert to local space
+	
+	# Create line mesh
 	var line_mesh = ImmediateMesh.new()
 	
 	# Create material if needed
 	if not fishing_line.material_override:
 		var line_material = StandardMaterial3D.new()
-		line_material.albedo_color = Color(0.9, 0.9, 0.9)  # White-ish
+		line_material.albedo_color = Color(1.0, 1.0, 1.0)  # Pure white for visibility
+		line_material.emission_enabled = true  # Make it glow
+		line_material.emission = Color(1.0, 1.0, 1.0, 0.8)
+		line_material.emission_energy = 0.5
 		line_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		fishing_line.material_override = line_material
 	
-	# Create line
+	# Get the direction vector from rod tip to bobber
+	var direction = end_pos.normalized()
+	
+	# Create perpendicular vectors to make a 3D line with thickness
+	var up = Vector3(0, 1, 0)
+	var right = direction.cross(up).normalized()
+	if right.length() < 0.001:  # Handle case where direction is parallel to up
+		right = Vector3(1, 0, 0)
+	var new_up = right.cross(direction).normalized()
+	
+	# Line thickness - make it thicker for better visibility
+	var thickness = 0.005  # Increased thickness for better visibility
+	
+	# Create line with triangles
 	line_mesh.clear_surfaces()
-	line_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
-	line_mesh.surface_add_vertex(start_pos)
-	line_mesh.surface_add_vertex(end_pos)
+	line_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)  # Use regular triangles
+	
+	# Calculate positions for cylinder-like line
+	var segments = 4  # Number of segments around the line
+	var angle_step = 2.0 * PI / segments
+	
+	# Create a tube-like mesh connecting rod tip to bobber
+	for i in range(segments):
+		var angle1 = i * angle_step
+		var angle2 = ((i + 1) % segments) * angle_step
+		
+		var dir1 = (right * cos(angle1) + new_up * sin(angle1)) * thickness
+		var dir2 = (right * cos(angle2) + new_up * sin(angle2)) * thickness
+		
+		# First triangle (at rod tip)
+		line_mesh.surface_set_color(Color(1, 1, 1, 1))
+		line_mesh.surface_add_vertex(start_pos + dir1)
+		line_mesh.surface_add_vertex(start_pos + dir2)
+		line_mesh.surface_add_vertex(end_pos + dir1)
+		
+		# Second triangle (connecting to bobber)
+		line_mesh.surface_add_vertex(end_pos + dir1)
+		line_mesh.surface_add_vertex(start_pos + dir2)
+		line_mesh.surface_add_vertex(end_pos + dir2)
+	
 	line_mesh.surface_end()
 	
 	# Apply mesh
 	fishing_line.mesh = line_mesh
-
+	
+	# Debug print to confirm line is connecting properly
+	print("Fishing line connecting rod_tip to bobber at: ", end_pos)
+	
 # Called when player enters a fishing zone
 func enter_fishing_zone():
 	is_in_fishing_zone = true
@@ -217,36 +309,50 @@ func start_fishing():
 	if has_fishing_rod_setup and fishing_rod != null:
 		rod_visible = true
 		fishing_rod.visible = true
-		print("Started fishing! Rod visibility: ", fishing_rod.visible)
+		
+		# Initialize bobber position at rod tip
+		if fishing_bobber:
+			fishing_bobber.visible = true
+			fishing_bobber.global_position = rod_tip.global_position
+			fishing_bobber.linear_velocity = Vector3(0, 0, 0)  # Reset velocity
+			
+			# Create/update the fishing line immediately
+			update_fishing_line()
 	
 	if fishing_prompt:
 		fishing_prompt.visible = false
+		
+	print("Started fishing! Rod visibility: ", fishing_rod.visible)
 
 # Update fishing state each frame
 func update_fishing(delta):
 	match fishing_state:
 		FishingState.CASTING:
-			# Extend line downward
-			if current_fishing_depth < fishing_distance:
-				current_fishing_depth += fishing_speed * delta
-				
-				# Update line visual
-				update_fishing_line(Vector3.ZERO, Vector3(0, -current_fishing_depth, 0))
-				
-				# Get global end position for resource detection
-				var global_end = rod_tip.global_position + Vector3(0, -current_fishing_depth, 0)
-				
-				# Check for collisions at line end
-				check_for_collisions(global_end)
-			else:
-				# Reached maximum distance, switch to waiting state
-				fishing_state = FishingState.WAITING
-				print("Line fully extended, waiting for fish...")
-				
+			# Apply downward force to bobber to simulate casting
+			if fishing_bobber:
+				if current_fishing_depth < fishing_distance:
+					# Add a controlled force downward - stronger force for straighter line
+					fishing_bobber.apply_central_force(Vector3(0, -50.0, 0))
+					current_fishing_depth = rod_tip.global_position.distance_to(fishing_bobber.global_position)
+					
+					# Update line to connect rod tip and bobber
+					update_fishing_line()
+					
+					# Check for collisions at bobber position
+					check_for_collisions(fishing_bobber.global_position)
+				else:
+					# Reached maximum distance, switch to waiting state
+					fishing_state = FishingState.WAITING
+					print("Line fully extended, waiting for fish...")
+			
 		FishingState.WAITING:
 			# Keep the line extended, periodically check for fish
-			var global_end = rod_tip.global_position + Vector3(0, -current_fishing_depth, 0)
-			check_for_collisions(global_end)
+			if fishing_bobber:
+				# Apply small downward force to keep bobber down
+				fishing_bobber.apply_central_force(Vector3(0, -5.0, 0))
+				# Update line visual to follow bobber
+				update_fishing_line()
+				check_for_collisions(fishing_bobber.global_position)
 			
 		FishingState.HOOKED:
 			# Switch to retrieving state and start animation
@@ -255,7 +361,8 @@ func update_fishing(delta):
 			
 		FishingState.RETRIEVING:
 			# Gradual retrieval is handled by the tween in retrieve_catch()
-			pass
+			if fishing_bobber:
+				update_fishing_line()
 
 # Check for collisions with floor and fishable resources
 func check_for_collisions(target_position):
@@ -277,7 +384,12 @@ func check_for_collisions(target_position):
 			print("Line hit something (floor or object).")
 			fishing_state = FishingState.WAITING
 			current_fishing_depth = rod_tip.global_position.distance_to(result.position)
-			update_fishing_line(Vector3.ZERO, Vector3(0, -current_fishing_depth, 0))
+			
+			# Stop bobber movement at collision point
+			if fishing_bobber:
+				fishing_bobber.linear_velocity = Vector3.ZERO
+				fishing_bobber.global_position = result.position
+				update_fishing_line()
 
 # Retrieve the caught resource with a slow animation
 func retrieve_catch():
@@ -287,32 +399,37 @@ func retrieve_catch():
 		# Create a tween to animate retrieval at 1 unit per second
 		var tween = create_tween().set_ease(Tween.EASE_OUT)
 		
+		# Calculate starting position and distance
+		var start_pos = fishing_bobber.global_position
+		var end_pos = rod_tip.global_position
+		var distance = start_pos.distance_to(end_pos)
+		
 		# Calculate how long retrieval should take at retrieval_speed
-		var retrieval_time = current_fishing_depth / retrieval_speed
+		var retrieval_time = distance / retrieval_speed
 		
-		# Animate line retraction
-		tween.tween_method(Callable(self, "_update_retrieval"), current_fishing_depth, 0.0, retrieval_time)
+		# Function to update bobber position during retrieval
+		var update_bobber_pos = func(t: float):
+			if fishing_bobber and is_instance_valid(fishing_bobber):
+				fishing_bobber.global_position = start_pos.lerp(end_pos, t)
+				update_fishing_line()
 		
-		# Move caught resource along with the line
+		# Animate bobber movement
+		tween.tween_method(update_bobber_pos, 0.0, 1.0, retrieval_time)
+		
+		# Move caught resource along with the bobber
 		if caught_resource:
-			var start_pos = caught_resource.global_position
-			var end_pos = rod_tip.global_position
+			var resource_start_pos = caught_resource.global_position
 			
 			# Function to update resource position during retrieval
 			var update_resource_pos = func(t: float):
 				if is_instance_valid(caught_resource):
-					caught_resource.global_position = start_pos.lerp(end_pos, t)
+					caught_resource.global_position = resource_start_pos.lerp(end_pos, t)
 			
 			# Add another track to move the resource
 			tween.parallel().tween_method(update_resource_pos, 0.0, 1.0, retrieval_time)
 		
 		# When complete, collect the resource and reset
 		tween.tween_callback(Callable(self, "_finish_collection"))
-
-# Update during retrieval animation
-func _update_retrieval(depth):
-	current_fishing_depth = depth
-	update_fishing_line(Vector3.ZERO, Vector3(0, -depth, 0))
 
 # Called when retrieval animation finishes
 func _finish_collection():
@@ -351,18 +468,29 @@ func retract_fishing_line():
 		
 	# Create a tween to animate line retraction
 	var tween = create_tween()
-	tween.tween_method(Callable(self, "_update_retract"), current_fishing_depth, 0.0, 0.5) # Faster retraction when manual
+	
+	# Start and end positions
+	var start_pos = fishing_bobber.global_position
+	var end_pos = rod_tip.global_position
+	
+	# Function to update bobber position during retraction
+	var update_bobber_pos = func(t: float):
+		if fishing_bobber and is_instance_valid(fishing_bobber):
+			fishing_bobber.global_position = start_pos.lerp(end_pos, t)
+			update_fishing_line()
+	
+	# Animate bobber movement (faster than regular retrieval)
+	tween.tween_method(update_bobber_pos, 0.0, 1.0, 0.5)
 	tween.tween_callback(Callable(self, "stop_fishing"))
-
-# Update during retraction animation
-func _update_retract(depth):
-	current_fishing_depth = depth
-	update_fishing_line(Vector3.ZERO, Vector3(0, -depth, 0))
 
 # Stop fishing and clean up
 func stop_fishing():
 	is_fishing = false
 	fishing_state = FishingState.IDLE
+	
+	# Hide bobber
+	if fishing_bobber:
+		fishing_bobber.visible = false
 	
 	# Clear fishing line
 	if fishing_line and fishing_line.mesh:
