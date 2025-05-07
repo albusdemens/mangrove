@@ -4,6 +4,8 @@ extends Node3D
 @export var points: int = 10
 @export var is_crystal: bool = false
 
+signal resource_collected(points, is_crystal)
+
 var area: Area3D
 
 func _ready():
@@ -47,6 +49,7 @@ func _ready():
 func _on_body_entered(body):
 	if body.has_method("collect_resource"):
 		body.collect_resource(points, is_crystal)
+		emit_signal("resource_collected", points, is_crystal)  # Emit signal when collected
 		if not is_crystal:  # Only flowers disappear
 			queue_free()
 

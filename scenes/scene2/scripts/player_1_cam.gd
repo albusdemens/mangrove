@@ -24,3 +24,6 @@ func _physics_process(delta):
 			look_at(target.global_transform.origin + target.global_transform.basis.z * -2.0)
 		else:
 			look_at(target.global_transform.origin)
+
+		# Ensure the camera remains fixed relative to the character's vertical position
+		global_transform.origin.y = target.global_transform.origin.y + offset.y

@@ -7,15 +7,36 @@ var flower_scene = preload("res://grown_flower_tile.tscn")
 # References
 @onready var grid_map = $GridMap
 @onready var camera = $Camera3D
+@onready var ui_node = $UI  # Reference to the UI node
+@onready var resource_counter = $UI_layer/ResourceCounter
 
 # Game state
 var current_mode = "PLACE_SOIL"  # Modes: PLACE_SOIL, PLANT_SEED, COLLECT
 var planted_items = {}  # Dictionary to track planted items by position
 
 func _ready():
+	ui_node = get_node_or_null("UI")
+	if not ui_node:
+		print("Error: UI node not found in the scene tree.")
+		return
+
+	# Ensure the ResourceCounter node is valid
+	if not resource_counter:
+		print("Error: ResourceCounter node not found.")
+		return
+
+	# Example: Initialize the coin count to 0
+	resource_counter.update_coin_count(0)
+
 	pass
 
 func _process(_delta):
+	# Check if the current camera is the third-person camera
+	if camera.current:
+		ui_node.visible = true  # Show the UI when in third-person view
+	else:
+		ui_node.visible = false  # Hide the UI otherwise
+
 	if Input.is_action_just_pressed("plant"):
 		handle_click()
 
@@ -138,3 +159,8 @@ func on_flower_collected(cell_key):
 	# Switch back to soil placement mode
 	current_mode = "PLACE_SOIL"
 	print("Flower collected! Back to soil placement mode.")
+
+func update_coins(new_count: int):
+	# Update the coin count dynamically
+	if resource_counter:
+		resource_counter.update_coin_count(new_count)

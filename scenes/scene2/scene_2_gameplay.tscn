@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://cosyiat2w302h"]
+[gd_scene load_steps=36 format=3 uid="uid://cosyiat2w302h"]
 
 [ext_resource type="Script" uid="uid://boq7b5130sg38" path="res://scripts/scene_2_gameplay.gd" id="1_7mgta"]
 [ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
@@ -6,6 +6,7 @@
 [ext_resource type="ArrayMesh" uid="uid://lv2us2otgur2" path="res://assets/dandelions.obj" id="2_irm7l"]
 [ext_resource type="Script" uid="uid://cktypxn05l6fx" path="res://scripts/CollectibleResource.gd" id="4_5ktjh"]
 [ext_resource type="Script" uid="uid://rh7mly6k0kh2" path="res://scripts/player_1_cam.gd" id="6_pksu1"]
+[ext_resource type="Script" uid="uid://bpbexr13xkdr" path="res://UI/ResourceCounter.gd" id="7_lonr1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wrdne"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -121,6 +122,12 @@ lock_rotation = true
 linear_damp = 5.0
 angular_damp = 5.0
 script = ExtResource("2_d1q0w")
+
+[node name="Player1_cam" type="Camera3D" parent="Player1"]
+transform = Transform3D(-1, 4.37114e-08, -7.57104e-08, 0, 0.866025, 0.5, 8.74228e-08, 0.5, -0.866025, -0.1, -1, 0)
+current = true
+script = ExtResource("6_pksu1")
+target_path = NodePath("..")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player1"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
@@ -268,8 +275,20 @@ shape = SubResource("CapsuleShape3D_dp8vw")
 
 [node name="GridMap" type="GridMap" parent="."]
 
-[node name="Player1_cam" type="Camera3D" parent="."]
-transform = Transform3D(-1, 4.37114e-08, -7.57103e-08, 0, 0.866025, 0.5, 8.74228e-08, 0.5, -0.866025, -0.1, 1, 0)
-current = true
-script = ExtResource("6_pksu1")
-target_path = NodePath("../Player1")
+[node name="UI_layer" type="CanvasLayer" parent="."]
+script = ExtResource("7_lonr1")
+
+[node name="ResourceCounter" type="Label" parent="UI_layer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 23.0
+grow_horizontal = 0
+text = "Coins: "
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
