@@ -7,6 +7,11 @@ extends Node3D
 var area: Area3D
 
 func _ready():
+	# Add to fishable_resource group if it's a flower (not crystal)
+	if !is_crystal:
+		add_to_group("fishable_resource")
+		print("Flower added to fishable_resource group")
+	
 	if is_crystal:
 		# Create static collision for crystals (can't pass through)
 		var static_body = StaticBody3D.new()
@@ -44,3 +49,11 @@ func _on_body_entered(body):
 		body.collect_resource(points, is_crystal)
 		if not is_crystal:  # Only flowers disappear
 			queue_free()
+
+# Called by the fishing system when caught by the bobber
+func collect(collector):
+	if collector.has_method("collect_resource"):
+		collector.collect_resource(points, is_crystal)
+		if not is_crystal:  # Only flowers disappear
+			queue_free()
+	print("Resource collected by: ", collector.name)

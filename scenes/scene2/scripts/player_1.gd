@@ -409,12 +409,28 @@ func _on_bobber_body_entered(body):
 		current_fishing_depth = rod_tip.global_position.distance_to(fishing_bobber.global_position)
 		
 		print("Bobber stopped at collision with: ", body.name)
+	
+	# Check if the object is a fishable flower
+	var parent = body.get_parent()
+	if parent and (parent.is_in_group("fishable_resource") or (parent.get_parent() and parent.get_parent().is_in_group("fishable_resource"))):
+		# Find the actual collectible node
+		var collectible = parent
+		if parent.get_parent() and parent.get_parent().is_in_group("fishable_resource"):
+			collectible = parent.get_parent()
 		
-	# If it's a fishable resource, hook it
-	if body.is_in_group("fishable_resource"):
+		print("Bobber hit a fishable resource: ", collectible.name)
+		
+		# Set the caught resource and change state to HOOKED
+		caught_resource = collectible
+		fishing_state = FishingState.HOOKED
+		
+		# Start retrieving the caught resource
+		retrieve_catch()
+	elif body.is_in_group("fishable_resource"):
 		caught_resource = body
 		fishing_state = FishingState.HOOKED
 		print("Hooked a fishable resource: ", body.name)
+		retrieve_catch()
 
 # Retrieve the caught resource with a slow animation
 func retrieve_catch():
