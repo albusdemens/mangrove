@@ -8,35 +8,54 @@ var flower_scene = preload("res://grown_flower_tile.tscn")
 @onready var grid_map = $GridMap
 @onready var camera = $Camera3D
 @onready var ui_node = $UI  # Reference to the UI node
-@onready var resource_counter = $UI/ResourceCounter
+# We'll find ResourceCounter dynamically in _ready()
+var resource_counter = null
 
 # Game state
 var current_mode = "PLACE_SOIL"  # Modes: PLACE_SOIL, PLANT_SEED, COLLECT
 var planted_items = {}  # Dictionary to track planted items by position
+var points = 0  # Track points (same as coins)
 
 func _ready():
+	# Find UI node
 	ui_node = get_node_or_null("UI")
 	if not ui_node:
 		print("Error: UI node not found in the scene tree.")
-		return
-
-	# Ensure the ResourceCounter node is valid
+		
+	# Try to find ResourceCounter by path or by name in the entire scene tree
+	resource_counter = get_node_or_null("UI/ResourceCounter")
+	
+	# If not found by direct path, search the entire scene tree
 	if not resource_counter:
-		print("Error: ResourceCounter node not found.")
-		return
+		resource_counter = find_resource_counter(self)
+		
+	if not resource_counter:
+		print("Error: ResourceCounter node not found in scene tree.")
+	else:
+		print("ResourceCounter found at path: " + str(resource_counter.get_path()))
+		
+	# Initialize the points to 0
+	update_points(points)
+	
+	# Make sure UI is visible if it exists
+	if ui_node:
+		ui_node.visible = true
 
-	# Example: Initialize the coin count to 0
-	resource_counter.update_coin_count(0)
-
-	pass
+# Helper function to recursively find ResourceCounter in scene tree
+func find_resource_counter(node):
+	# Check if this node has the correct name and is a Label
+	if node.get_name() == "ResourceCounter" and node is Label:
+		return node
+		
+	# Recursively check children
+	for child in node.get_children():
+		var found = find_resource_counter(child)
+		if found:
+			return found
+			
+	return null
 
 func _process(_delta):
-	# Check if the current camera is the third-person camera
-	if camera.current:
-		ui_node.visible = true  # Show the UI when in third-person view
-	else:
-		ui_node.visible = false  # Hide the UI otherwise
-
 	if Input.is_action_just_pressed("plant"):
 		handle_click()
 
@@ -102,6 +121,10 @@ func plant_seed_at(world_position):
 		"type": "seed"
 	}
 	
+	# Deduct 2 points for planting a seed
+	points = points - 2  # Modified this line to subtract 2 from the total
+	update_points(points)
+	
 	# Start growth timer
 	var timer = Timer.new()
 	timer.one_shot = true
@@ -112,7 +135,7 @@ func plant_seed_at(world_position):
 	
 	# Switch back to soil placement mode
 	current_mode = "PLACE_SOIL"
-	print("Seed planted. Back to soil placement mode.")
+	print("Seed planted. Back to soil placement mode. Points: " + str(points))
 
 func grow_flower(cell_key):
 	# Make sure the seed still exists
@@ -150,17 +173,37 @@ func try_collect_at(world_position):
 	# Check if there's a flower at this position
 	if cell_key in planted_items and planted_items[cell_key]["type"] == "flower":
 		# The flower's input_event will handle collection
-		pass
+		# For direct click collection:
+		on_flower_collected(cell_key)
 
 func on_flower_collected(cell_key):
 	# Remove reference
 	planted_items.erase(cell_key)
 	
+	# Add 10 points when flower is collected
+	points += 10
+	update_points(points)
+	
+	# Debug message
+	print("DEBUG: Flower collected - Points updated to: " + str(points))
+	
 	# Switch back to soil placement mode
 	current_mode = "PLACE_SOIL"
-	print("Flower collected! Back to soil placement mode.")
+	print("Flower collected! Back to soil placement mode. Points: " + str(points))
 
-func update_coins(new_count: int):
-	# Update the coin count dynamically
+# Renamed function to better reflect what we're tracking
+func update_points(new_count: int):
+	# Update internal count
+	points = new_count
+	
+	# Update the point count in the UI
 	if resource_counter:
+		print("DEBUG: Calling resource_counter.update_coin_count(" + str(new_count) + ")")
 		resource_counter.update_coin_count(new_count)
+		print("DEBUG: After calling update_coin_count. ResourceCounter path: " + str(resource_counter.get_path()))
+	else:
+		print("ERROR: ResourceCounter is null! Points: " + str(new_count))
+
+# For backward compatibility, maintain this function
+func update_coins(new_count: int):
+	update_points(new_count)

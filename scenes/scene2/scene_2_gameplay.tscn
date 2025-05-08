@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://cosyiat2w302h"]
+[gd_scene load_steps=37 format=3 uid="uid://cosyiat2w302h"]
 
 [ext_resource type="Script" uid="uid://boq7b5130sg38" path="res://scripts/scene_2_gameplay.gd" id="1_7mgta"]
 [ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
@@ -85,6 +85,10 @@ albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lonr1"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dp8vw"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_lonr1"]
+font_size = 60
+font_color = Color(1, 0.0784314, 1, 1)
 
 [node name="scene_2_gameplay" type="Node3D"]
 script = ExtResource("1_7mgta")
@@ -278,11 +282,11 @@ shape = SubResource("CapsuleShape3D_dp8vw")
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="ResourceCounter" type="Label" parent="UI"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -40.0
-offset_bottom = 23.0
-grow_horizontal = 0
+custom_minimum_size = Vector2(100, 100)
+offset_right = 485.0
+offset_bottom = 251.0
 text = "Coins: "
+label_settings = SubResource("LabelSettings_lonr1")
+horizontal_alignment = 1
+vertical_alignment = 2
 script = ExtResource("7_lonr1")

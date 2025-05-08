@@ -4,6 +4,8 @@ var move_speed = 1
 var total_points = 0
 var can_collect_crystals = false  # Player 1 cannot collect crystals
 var seed_count = 5  # Starting with 5 seeds
+# Reference to ResourceCounter
+var resource_counter = null
 
 # Fishing-related variables
 var is_in_fishing_zone = false
@@ -45,6 +47,9 @@ func _ready():
 	# Debug log to confirm player is ready
 	print("Player 1 ready with " + str(seed_count) + " seeds.")
 	
+	# Find resource counter
+	call_deferred("_find_resource_counter")
+	
 	# Find and set fishing prompt
 	fishing_prompt = get_node_or_null("/root/scene_2_gameplay/UI/FishingPrompt")
 	if not fishing_prompt:
@@ -55,6 +60,35 @@ func _ready():
 	
 	# Set up the fishing rod but keep it hidden
 	call_deferred("setup_fishing_system")
+
+# Called after _ready via call_deferred to ensure we're in the scene tree
+func _find_resource_counter():
+	resource_counter = get_node_or_null("/root/scene_2_gameplay/UI/ResourceCounter")
+	
+	# If not found by direct path, search the entire scene tree
+	if not resource_counter:
+		resource_counter = find_resource_counter(get_tree().root)
+		
+	if not resource_counter:
+		print("Error: ResourceCounter node not found in scene tree.")
+	else:
+		print("Player 1 found ResourceCounter at path: " + str(resource_counter.get_path()))
+		# Initialize UI with current points
+		resource_counter.update_coin_count(total_points)
+
+# Helper function to recursively find ResourceCounter in scene tree
+func find_resource_counter(node):
+	# Check if this node has the correct name and is a Label
+	if node.get_name() == "ResourceCounter" and node is Label:
+		return node
+		
+	# Recursively check children
+	for child in node.get_children():
+		var found = find_resource_counter(child)
+		if found:
+			return found
+			
+	return null
 
 # Called after _ready via call_deferred to ensure we're in the scene tree
 func _find_planting_manager():
@@ -128,6 +162,13 @@ func collect_resource(points, is_crystal):
 	total_points += points
 	seed_count += 1  # Get one seed when collecting a dandelion
 	print("Player 1 collected flower! Total points: " + str(total_points) + ", Seeds: " + str(seed_count))
+	
+	# Update the ResourceCounter UI
+	if resource_counter:
+		resource_counter.update_coin_count(total_points)
+		print("DEBUG: Updated ResourceCounter to show " + str(total_points) + " points")
+	else:
+		print("ERROR: ResourceCounter is null when collecting flower! Points: " + str(total_points))
 
 # Called by the planting manager when using a seed
 func use_seed_for_planting():
