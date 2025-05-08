@@ -8,7 +8,7 @@ var flower_scene = preload("res://grown_flower_tile.tscn")
 @onready var grid_map = $GridMap
 @onready var camera = $Camera3D
 @onready var ui_node = $UI  # Reference to the UI node
-@onready var resource_counter = $UI_layer/ResourceCounter
+@onready var resource_counter = $UI/ResourceCounter
 
 # Game state
 var current_mode = "PLACE_SOIL"  # Modes: PLACE_SOIL, PLANT_SEED, COLLECT
