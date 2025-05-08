@@ -2,10 +2,52 @@
 
 [ext_resource type="ArrayMesh" uid="uid://blihjcavoayur" path="res://assets/scene2/models/godot_mountain.obj" id="2_ogt5y"]
 [ext_resource type="Shader" uid="uid://babp71s1wsreb" path="res://assets/scene2/shaders/scene_2.gdshader" id="2_oq54p"]
+[ext_resource type="Script" uid="uid://b1mhbl4fwl2g7" path="res://scripts/scene2/MountainQuadrants.gd" id="3_oq54p"]
 [ext_resource type="PackedScene" uid="uid://7fv2a46x3yu3" path="res://prefabs/CharacterCube.tscn" id="4_4m3wf"]
 [ext_resource type="PackedScene" uid="uid://bkkw4n3xsx3c3" path="res://prefabs/CharacterSphere.tscn" id="5_2qq4h"]
 [ext_resource type="PackedScene" uid="uid://doa7d5jnbmeny" path="res://prefabs/CharacterPrism.tscn" id="6_dg4y0"]
 [ext_resource type="PackedScene" uid="uid://cug5mqex7xeyf" path="res://prefabs/CharacterTorus.tscn" id="7_45iln"]
+
+[sub_resource type="GDScript" id="GDScript_ogt5y"]
+script/source = "extends Node3D
+
+func _ready():
+	var mountain = $Mountain  # Adjust to match your node path
+	
+	# Create a new shader material
+	var material = ShaderMaterial.new()
+	var shader = Shader.new()
+	
+	# Define shader with origin adjustment
+	shader.code = \"\"\"
+shader_type spatial;
+
+void fragment() {
+	// Get vertex position relative to model center
+	vec3 pos = VERTEX;
+	
+	// Create quadrants with very clear colors
+	if (pos.x < 0.0 && pos.z < 0.0) {
+		ALBEDO = vec3(1.0, 0.0, 0.0); // Pure red
+	} else if (pos.x >= 0.0 && pos.z < 0.0) {
+		ALBEDO = vec3(0.0, 1.0, 0.0); // Pure green
+	} else if (pos.x < 0.0 && pos.z >= 0.0) {
+		ALBEDO = vec3(0.0, 0.0, 1.0); // Pure blue
+	} else {
+		ALBEDO = vec3(1.0, 1.0, 0.0); // Yellow
+	}
+}
+\"\"\"
+	
+	# Assign shader to material
+	material.shader = shader
+	
+	# Apply material to mountain mesh
+	mountain.material_override = material
+	
+	# Debug message
+	print(\"Applied quadrant shader with pure colors\")
+"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ogt5y"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -64,6 +106,7 @@ material_override = SubResource("StandardMaterial3D_3r24c")
 material_overlay = SubResource("ShaderMaterial_c5w0c")
 mesh = ExtResource("2_ogt5y")
 skeleton = NodePath("")
+script = ExtResource("3_oq54p")
 
 [node name="CharacterZoneCube" type="Node3D" parent="Mountain"]
 transform = Transform3D(1, 0, 0, 0, 1, 1.77636e-15, 0, -1.77636e-15, 1, -0.0396617, 0.0396706, 0.906792)
