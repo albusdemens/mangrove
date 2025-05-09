@@ -23,13 +23,13 @@ background_color = Color(0.780392, 0.262745, 0, 1)
 sky = SubResource("Sky_ogt5y")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wrdne"]
-albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jehat"]
-albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_irm7l"]
-albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_d1q0w"]
 

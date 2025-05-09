@@ -206,7 +206,7 @@ func record_frame():
 		
 		# Show recording progress
 		if recording_frames % 60 == 0:  # Every second
-			print("Recording: " + str(recording_frames / 60) + " seconds")
+			print("Recording: " + str(float(recording_frames) / 60) + " seconds")
 	else:
 		# Max frames reached, stop recording
 		toggle_recording()
