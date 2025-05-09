@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://cosyiat2w302h"]
+[gd_scene load_steps=38 format=3 uid="uid://cosyiat2w302h"]
 
 [ext_resource type="Script" uid="uid://boq7b5130sg38" path="res://scripts/scene_2_gameplay.gd" id="1_7mgta"]
 [ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
@@ -89,6 +89,9 @@ albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_lonr1"]
 font_size = 60
 font_color = Color(1, 0.0784314, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gn022"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 
 [node name="scene_2_gameplay" type="Node3D"]
 script = ExtResource("1_7mgta")
@@ -290,3 +293,30 @@ label_settings = SubResource("LabelSettings_lonr1")
 horizontal_alignment = 1
 vertical_alignment = 2
 script = ExtResource("7_lonr1")
+
+[node name="Player2" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.552867, 2, -0.0759002)
+lock_rotation = true
+linear_damp = 5.0
+angular_damp = 5.0
+script = ExtResource("2_d1q0w")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("BoxMesh_d1q0w")
+surface_material_override/0 = SubResource("StandardMaterial3D_gn022")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_gn022")
+
+[node name="FishingRod" type="Node3D" parent="Player2"]
+transform = Transform3D(1, 0, 0, 0, 0.819152, -0.573577, 0, 0.573577, 0.819152, 0, 0, 0.265986)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player2/FishingRod"]
+transform = Transform3D(0.025, 0, 0, 0, 0.248192, -0.00300126, 0, 0.0300126, 0.0248192, 0.0598988, 0.128247, -0.217751)
+mesh = SubResource("CylinderMesh_pksu1")
+
+[node name="RodTip" type="Marker3D" parent="Player2/FishingRod"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
