@@ -1,7 +1,60 @@
+<<<<<<< HEAD
 [gd_scene load_steps=8 format=3 uid="uid://c8e6c3t2yj84p"]
 
 [ext_resource type="ArrayMesh" uid="uid://bpcv06c2i7et4" path="res://models/godot_mountain.obj" id="2_ogt5y"]
 [ext_resource type="Shader" uid="uid://babp71s1wsreb" path="res://shaders/scene_2.gdshader" id="2_oq54p"]
+=======
+[gd_scene load_steps=14 format=3 uid="uid://c8e6c3t2yj84p"]
+
+[ext_resource type="ArrayMesh" uid="uid://blihjcavoayur" path="res://assets/scene2/models/godot_mountain.obj" id="2_ogt5y"]
+[ext_resource type="Shader" uid="uid://babp71s1wsreb" path="res://assets/scene2/shaders/scene_2.gdshader" id="2_oq54p"]
+[ext_resource type="Script" uid="uid://b1mhbl4fwl2g7" path="res://scripts/scene2/MountainQuadrants.gd" id="3_oq54p"]
+[ext_resource type="PackedScene" uid="uid://7fv2a46x3yu3" path="res://prefabs/CharacterCube.tscn" id="4_4m3wf"]
+[ext_resource type="PackedScene" uid="uid://bkkw4n3xsx3c3" path="res://prefabs/CharacterSphere.tscn" id="5_2qq4h"]
+[ext_resource type="PackedScene" uid="uid://doa7d5jnbmeny" path="res://prefabs/CharacterPrism.tscn" id="6_dg4y0"]
+[ext_resource type="PackedScene" uid="uid://cug5mqex7xeyf" path="res://prefabs/CharacterTorus.tscn" id="7_45iln"]
+
+[sub_resource type="GDScript" id="GDScript_ogt5y"]
+script/source = "extends Node3D
+
+func _ready():
+	var mountain = $Mountain  # Adjust to match your node path
+	
+	# Create a new shader material
+	var material = ShaderMaterial.new()
+	var shader = Shader.new()
+	
+	# Define shader with origin adjustment
+	shader.code = \"\"\"
+shader_type spatial;
+
+void fragment() {
+	// Get vertex position relative to model center
+	vec3 pos = VERTEX;
+	
+	// Create quadrants with very clear colors
+	if (pos.x < 0.0 && pos.z < 0.0) {
+		ALBEDO = vec3(1.0, 0.0, 0.0); // Pure red
+	} else if (pos.x >= 0.0 && pos.z < 0.0) {
+		ALBEDO = vec3(0.0, 1.0, 0.0); // Pure green
+	} else if (pos.x < 0.0 && pos.z >= 0.0) {
+		ALBEDO = vec3(0.0, 0.0, 1.0); // Pure blue
+	} else {
+		ALBEDO = vec3(1.0, 1.0, 0.0); // Yellow
+	}
+}
+\"\"\"
+	
+	# Assign shader to material
+	material.shader = shader
+	
+	# Apply material to mountain mesh
+	mountain.material_override = material
+	
+	# Debug message
+	print(\"Applied quadrant shader with pure colors\")
+"
+>>>>>>> scene2-characters-init
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ogt5y"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -9,13 +62,21 @@ sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
 ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
 ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
 
+<<<<<<< HEAD
 [sub_resource type="Sky" id="Sky_ogt5y"]
+=======
+[sub_resource type="Sky" id="Sky_oq54p"]
+>>>>>>> scene2-characters-init
 sky_material = SubResource("ProceduralSkyMaterial_ogt5y")
 
 [sub_resource type="Environment" id="Environment_8dwar"]
 background_mode = 2
 background_color = Color(0.780392, 0.262745, 0, 1)
+<<<<<<< HEAD
 sky = SubResource("Sky_ogt5y")
+=======
+sky = SubResource("Sky_oq54p")
+>>>>>>> scene2-characters-init
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3r24c"]
 shading_mode = 2
@@ -34,6 +95,10 @@ shader_parameter/contour_spacing = 0.05
 shader_parameter/contour_thickness = 0.005
 
 [node name="Scene2" type="Node3D"]
+<<<<<<< HEAD
+=======
+script = SubResource("GDScript_ogt5y")
+>>>>>>> scene2-characters-init
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8dwar")
@@ -60,3 +125,67 @@ material_override = SubResource("StandardMaterial3D_3r24c")
 material_overlay = SubResource("ShaderMaterial_c5w0c")
 mesh = ExtResource("2_ogt5y")
 skeleton = NodePath("")
+<<<<<<< HEAD
+=======
+script = ExtResource("3_oq54p")
+
+[node name="CharacterZoneCube" type="Node3D" parent="Mountain"]
+transform = Transform3D(1, 0, 0, 0, 1, 1.77636e-15, 0, -1.77636e-15, 1, -0.0396617, 0.0396706, 0.906792)
+
+[node name="CharacterCube1" parent="Mountain/CharacterZoneCube" instance=ExtResource("4_4m3wf")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, 0, 0)
+
+[node name="CharacterCube2" parent="Mountain/CharacterZoneCube" instance=ExtResource("4_4m3wf")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, 0, 0)
+
+[node name="CharacterCube3" parent="Mountain/CharacterZoneCube" instance=ExtResource("4_4m3wf")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, 0, 0)
+
+[node name="CharacterCube4" parent="Mountain/CharacterZoneCube" instance=ExtResource("4_4m3wf")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, 0, 0)
+
+[node name="CharacterZoneSphere" type="Node3D" parent="Mountain"]
+transform = Transform3D(1, 0, 0, 0, 1, 1.77636e-15, 0, -1.77636e-15, 1, -0.0654977, -0.0141296, 0.917968)
+
+[node name="CharacterSphere1" parent="Mountain/CharacterZoneSphere" instance=ExtResource("5_2qq4h")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 1.249e-17, 0, -1.249e-17, 0.003, 0, 0, 0)
+
+[node name="CharacterSphere2" parent="Mountain/CharacterZoneSphere" instance=ExtResource("5_2qq4h")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 1.66533e-17, 0, -1.66533e-17, 0.003, 0, -0.00205197, 0)
+
+[node name="CharacterSphere3" parent="Mountain/CharacterZoneSphere" instance=ExtResource("5_2qq4h")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 1.66533e-17, 0, -1.66533e-17, 0.003, 0.001903, -0.00205197, 0)
+
+[node name="CharacterSphere4" parent="Mountain/CharacterZoneSphere" instance=ExtResource("5_2qq4h")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 1.66533e-17, 0, -1.66533e-17, 0.003, 0.00278753, 0.000212979, 0)
+
+[node name="CharacterZonePrism" type="Node3D" parent="Mountain"]
+transform = Transform3D(1, 0, 0, 0, 1, 1.77636e-15, 0, -1.77636e-15, 1, 0.0164449, 0.0148416, 0.843855)
+
+[node name="CharacterPrism1" parent="Mountain/CharacterZonePrism" instance=ExtResource("6_dg4y0")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, 0, 0)
+
+[node name="CharacterPrism2" parent="Mountain/CharacterZonePrism" instance=ExtResource("6_dg4y0")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, 0, 0)
+
+[node name="CharacterPrism3" parent="Mountain/CharacterZonePrism" instance=ExtResource("6_dg4y0")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, 0, 0)
+
+[node name="CharacterPrism4" parent="Mountain/CharacterZonePrism" instance=ExtResource("6_dg4y0")]
+transform = Transform3D(0.003, 0, 0, 0, 0.003, 0, 0, 0, 0.003, 0, 0, 0)
+
+[node name="CharacterZoneTorus" type="Node3D" parent="Mountain"]
+transform = Transform3D(1, 0, 0, 0, 1, 1.77636e-15, 0, -1.77636e-15, 1, 0.0123985, -0.0126552, 0.814103)
+
+[node name="CharacterTorus1" parent="Mountain/CharacterZoneTorus" instance=ExtResource("7_45iln")]
+transform = Transform3D(0.003, 0, 0, 0, -1.31134e-10, -0.003, 0, 0.003, -1.31134e-10, 0, 0, 0)
+
+[node name="CharacterTorus2" parent="Mountain/CharacterZoneTorus" instance=ExtResource("7_45iln")]
+transform = Transform3D(0.003, 0, 0, 0, -1.31134e-10, -0.003, 0, 0.003, -1.31134e-10, 0, 0, 0)
+
+[node name="CharacterTorus3" parent="Mountain/CharacterZoneTorus" instance=ExtResource("7_45iln")]
+transform = Transform3D(0.003, 0, 0, 0, -1.31134e-10, -0.003, 0, 0.003, -1.31134e-10, 0, 0, 0)
+
+[node name="CharacterTorus4" parent="Mountain/CharacterZoneTorus" instance=ExtResource("7_45iln")]
+transform = Transform3D(0.003, 0, 0, 0, -1.31134e-10, -0.003, 0, 0.003, -1.31134e-10, 0, 0, 0)
+>>>>>>> scene2-characters-init
