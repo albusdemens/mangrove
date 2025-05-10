@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://cosyiat2w302h"]
+[gd_scene load_steps=40 format=3 uid="uid://cosyiat2w302h"]
 
 [ext_resource type="Script" uid="uid://boq7b5130sg38" path="res://scripts/scene_2_gameplay.gd" id="1_7mgta"]
 [ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
@@ -9,37 +9,7 @@
 [ext_resource type="Script" uid="uid://bpbexr13xkdr" path="res://UI/ResourceCounter.gd" id="7_lonr1"]
 [ext_resource type="Script" uid="uid://btxhpu3xcfls5" path="res://scripts/player_2.gd" id="8_dp8vw"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wrdne"]
-sky_top_color = Color(1, 0.960784, 0.619608, 1)
-sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
-ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
-ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
-
-[sub_resource type="Sky" id="Sky_ogt5y"]
-sky_material = SubResource("ProceduralSkyMaterial_wrdne")
-
-[sub_resource type="Environment" id="Environment_jehat"]
-background_mode = 2
-background_color = Color(0.780392, 0.262745, 0, 1)
-sky = SubResource("Sky_ogt5y")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wrdne"]
-albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jehat"]
-albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_irm7l"]
-albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_d1q0w"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c6rhq"]
-albedo_color = Color(0.619608, 0.101961, 0.101961, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_gn022"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_pksu1"]
+[sub_resource type="NavigationMesh" id="NavigationMesh_dp8vw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ktjh"]
 albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
@@ -87,6 +57,38 @@ albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dp8vw"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wrdne"]
+sky_top_color = Color(1, 0.960784, 0.619608, 1)
+sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
+ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
+ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="Sky" id="Sky_ogt5y"]
+sky_material = SubResource("ProceduralSkyMaterial_wrdne")
+
+[sub_resource type="Environment" id="Environment_jehat"]
+background_mode = 2
+background_color = Color(0.780392, 0.262745, 0, 1)
+sky = SubResource("Sky_ogt5y")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wrdne"]
+albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jehat"]
+albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_irm7l"]
+albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d1q0w"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c6rhq"]
+albedo_color = Color(0.619608, 0.101961, 0.101961, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gn022"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pksu1"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_lonr1"]
 font_size = 60
 font_color = Color(1, 0.0784314, 1, 1)
@@ -99,6 +101,139 @@ script = ExtResource("1_7mgta")
 metadata/movie_file = &"res://output_video.avi"
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_dp8vw")
+
+[node name="Crystal" type="MeshInstance3D" parent="NavigationRegion3D" groups=["blue_gems"]]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.071, 1.55, 0.95)
+mesh = ExtResource("1_jehat")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
+surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
+surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
+surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
+surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
+surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
+surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
+surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
+surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
+surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
+script = ExtResource("4_5ktjh")
+points = 50
+is_crystal = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Crystal"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Crystal/StaticBody3D"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+shape = SubResource("CylinderShape3D_5ktjh")
+
+[node name="Crystal2" type="MeshInstance3D" parent="NavigationRegion3D" groups=["blue_gems"]]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.845, 1.55, 0.14)
+mesh = ExtResource("1_jehat")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
+surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
+surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
+surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
+surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
+surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
+surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
+surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
+surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
+surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
+script = ExtResource("4_5ktjh")
+points = 50
+is_crystal = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Crystal2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Crystal2/StaticBody3D"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+shape = SubResource("CylinderShape3D_7mgta")
+
+[node name="Crystal3" type="MeshInstance3D" parent="NavigationRegion3D" groups=["blue_gems"]]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.0273562, 0.208347, 1.84164)
+mesh = ExtResource("1_jehat")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
+surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
+surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
+surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
+surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
+surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
+surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
+surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
+surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
+surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
+script = ExtResource("4_5ktjh")
+points = 50
+is_crystal = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Crystal3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Crystal3/StaticBody3D"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+shape = SubResource("CylinderShape3D_pksu1")
+
+[node name="Dandelions" type="MeshInstance3D" parent="NavigationRegion3D" groups=["white_flowers"]]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.537, 1.56, 0.8)
+mesh = ExtResource("2_irm7l")
+skeleton = NodePath("../..")
+script = ExtResource("4_5ktjh")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Dandelions"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Dandelions/StaticBody3D"]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_5ktjh")
+
+[node name="Dandelions2" type="MeshInstance3D" parent="NavigationRegion3D" groups=["white_flowers"]]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 1)
+mesh = ExtResource("2_irm7l")
+skeleton = NodePath("../..")
+script = ExtResource("4_5ktjh")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Dandelions2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Dandelions2/StaticBody3D"]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_7mgta")
+
+[node name="Dandelions3" type="MeshInstance3D" parent="NavigationRegion3D" groups=["white_flowers"]]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 1.2)
+mesh = ExtResource("2_irm7l")
+skeleton = NodePath("../..")
+script = ExtResource("4_5ktjh")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Dandelions3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Dandelions3/StaticBody3D"]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_pksu1")
+
+[node name="Dandelions4" type="MeshInstance3D" parent="NavigationRegion3D" groups=["white_flowers"]]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 0.6)
+mesh = ExtResource("2_irm7l")
+skeleton = NodePath("../..")
+script = ExtResource("4_5ktjh")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Dandelions4"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Dandelions4/StaticBody3D"]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_lonr1")
+
+[node name="Dandelions5" type="MeshInstance3D" parent="NavigationRegion3D" groups=["red_flower", "white_flowers"]]
+transform = Transform3D(0.600643, 0, -0.449142, 0, 0.75, 0, 0.449142, 0, 0.600643, 0.93311, 0.198862, 1.74848)
+mesh = ExtResource("2_irm7l")
+skeleton = NodePath("../..")
+script = ExtResource("4_5ktjh")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Dandelions5"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Dandelions5/StaticBody3D"]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_dp8vw")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_jehat")
@@ -158,130 +293,6 @@ mesh = SubResource("CylinderMesh_pksu1")
 
 [node name="RodTip" type="Marker3D" parent="Player1/FishingRod"]
 transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
-
-[node name="Crystal" type="MeshInstance3D" parent="." groups=["blue_gems"]]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.071, 1.55, 0.95)
-mesh = ExtResource("1_jehat")
-surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
-surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
-surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
-surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
-surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
-surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
-surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
-surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
-surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
-surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
-script = ExtResource("4_5ktjh")
-points = 50
-is_crystal = true
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Crystal"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Crystal/StaticBody3D"]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
-shape = SubResource("CylinderShape3D_5ktjh")
-
-[node name="Crystal2" type="MeshInstance3D" parent="." groups=["blue_gems"]]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.845, 1.55, 0.14)
-mesh = ExtResource("1_jehat")
-surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
-surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
-surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
-surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
-surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
-surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
-surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
-surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
-surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
-surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
-script = ExtResource("4_5ktjh")
-points = 50
-is_crystal = true
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Crystal2"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Crystal2/StaticBody3D"]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
-shape = SubResource("CylinderShape3D_7mgta")
-
-[node name="Crystal3" type="MeshInstance3D" parent="." groups=["blue_gems"]]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.0273562, 0.208347, 1.84164)
-mesh = ExtResource("1_jehat")
-surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
-surface_material_override/1 = SubResource("StandardMaterial3D_7mgta")
-surface_material_override/2 = SubResource("StandardMaterial3D_pksu1")
-surface_material_override/3 = SubResource("StandardMaterial3D_lonr1")
-surface_material_override/4 = SubResource("StandardMaterial3D_dp8vw")
-surface_material_override/5 = SubResource("StandardMaterial3D_tt7hj")
-surface_material_override/6 = SubResource("StandardMaterial3D_bx8yh")
-surface_material_override/7 = SubResource("StandardMaterial3D_k0xh4")
-surface_material_override/8 = SubResource("StandardMaterial3D_mjh4l")
-surface_material_override/9 = SubResource("StandardMaterial3D_bjg02")
-script = ExtResource("4_5ktjh")
-points = 50
-is_crystal = true
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Crystal3"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Crystal3/StaticBody3D"]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
-shape = SubResource("CylinderShape3D_pksu1")
-
-[node name="Dandelions" type="MeshInstance3D" parent="." groups=["white_flowers"]]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.537, 1.56, 0.8)
-mesh = ExtResource("2_irm7l")
-script = ExtResource("4_5ktjh")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Dandelions"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions/StaticBody3D"]
-transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
-shape = SubResource("CapsuleShape3D_5ktjh")
-
-[node name="Dandelions2" type="MeshInstance3D" parent="." groups=["white_flowers"]]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 1)
-mesh = ExtResource("2_irm7l")
-script = ExtResource("4_5ktjh")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Dandelions2"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions2/StaticBody3D"]
-transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
-shape = SubResource("CapsuleShape3D_7mgta")
-
-[node name="Dandelions3" type="MeshInstance3D" parent="." groups=["white_flowers"]]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 1.2)
-mesh = ExtResource("2_irm7l")
-script = ExtResource("4_5ktjh")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Dandelions3"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions3/StaticBody3D"]
-transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
-shape = SubResource("CapsuleShape3D_pksu1")
-
-[node name="Dandelions4" type="MeshInstance3D" parent="." groups=["white_flowers"]]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 0.6)
-mesh = ExtResource("2_irm7l")
-script = ExtResource("4_5ktjh")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Dandelions4"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions4/StaticBody3D"]
-transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
-shape = SubResource("CapsuleShape3D_lonr1")
-
-[node name="Dandelions5" type="MeshInstance3D" parent="." groups=["red_flower", "white_flowers"]]
-transform = Transform3D(0.600643, 0, -0.449142, 0, 0.75, 0, 0.449142, 0, 0.600643, 0.93311, 0.198862, 1.74848)
-mesh = ExtResource("2_irm7l")
-script = ExtResource("4_5ktjh")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Dandelions5"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Dandelions5/StaticBody3D"]
-transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
-shape = SubResource("CapsuleShape3D_dp8vw")
 
 [node name="GridMap" type="GridMap" parent="."]
 
