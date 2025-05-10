@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://cosyiat2w302h"]
+[gd_scene load_steps=39 format=3 uid="uid://cosyiat2w302h"]
 
 [ext_resource type="Script" uid="uid://boq7b5130sg38" path="res://scripts/scene_2_gameplay.gd" id="1_7mgta"]
 [ext_resource type="ArrayMesh" uid="uid://dluby4n3osq6s" path="res://assets/crystal.obj" id="1_jehat"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cktypxn05l6fx" path="res://scripts/CollectibleResource.gd" id="4_5ktjh"]
 [ext_resource type="Script" uid="uid://rh7mly6k0kh2" path="res://scripts/player_1_cam.gd" id="6_pksu1"]
 [ext_resource type="Script" uid="uid://bpbexr13xkdr" path="res://UI/ResourceCounter.gd" id="7_lonr1"]
+[ext_resource type="Script" uid="uid://btxhpu3xcfls5" path="res://scripts/player_2.gd" id="8_dp8vw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wrdne"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -97,24 +98,26 @@ albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 script = ExtResource("1_7mgta")
 metadata/movie_file = &"res://output_video.avi"
 
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_jehat")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 1.99827, 3.36405)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="CSGBox3D" type="CSGBox3D" parent="." groups=["Navigation"]]
 transform = Transform3D(4, 0, 0, 0, 1, 0, 0, 0, 5, -0.0366786, -0.355517, 0)
 use_collision = true
 size = Vector3(0.836182, 1, 1)
 material = SubResource("StandardMaterial3D_wrdne")
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+[node name="CSGBox3D2" type="CSGBox3D" parent="." groups=["Navigation"]]
 transform = Transform3D(2, 0, 0, 0, 3, 0, 0, 0, 3, 0.276703, 0, 0)
 use_collision = true
 material = SubResource("StandardMaterial3D_jehat")
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="."]
+[node name="CSGBox3D3" type="CSGBox3D" parent="." groups=["Navigation"]]
 transform = Transform3D(1, 0, 0, 0, 2, 0, 0, 0, 1, 0.596316, -0.108398, 0.556862)
 use_collision = true
 size = Vector3(2.65631, 1, 1)
@@ -156,7 +159,7 @@ mesh = SubResource("CylinderMesh_pksu1")
 [node name="RodTip" type="Marker3D" parent="Player1/FishingRod"]
 transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
 
-[node name="Crystal" type="MeshInstance3D" parent="."]
+[node name="Crystal" type="MeshInstance3D" parent="." groups=["blue_gems"]]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.071, 1.55, 0.95)
 mesh = ExtResource("1_jehat")
 surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
@@ -179,7 +182,7 @@ is_crystal = true
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 shape = SubResource("CylinderShape3D_5ktjh")
 
-[node name="Crystal2" type="MeshInstance3D" parent="."]
+[node name="Crystal2" type="MeshInstance3D" parent="." groups=["blue_gems"]]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.845, 1.55, 0.14)
 mesh = ExtResource("1_jehat")
 surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
@@ -202,7 +205,7 @@ is_crystal = true
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 shape = SubResource("CylinderShape3D_7mgta")
 
-[node name="Crystal3" type="MeshInstance3D" parent="."]
+[node name="Crystal3" type="MeshInstance3D" parent="." groups=["blue_gems"]]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.0273562, 0.208347, 1.84164)
 mesh = ExtResource("1_jehat")
 surface_material_override/0 = SubResource("StandardMaterial3D_5ktjh")
@@ -225,7 +228,7 @@ is_crystal = true
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 shape = SubResource("CylinderShape3D_pksu1")
 
-[node name="Dandelions" type="MeshInstance3D" parent="."]
+[node name="Dandelions" type="MeshInstance3D" parent="." groups=["white_flowers"]]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.537, 1.56, 0.8)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
@@ -236,7 +239,7 @@ script = ExtResource("4_5ktjh")
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_5ktjh")
 
-[node name="Dandelions2" type="MeshInstance3D" parent="."]
+[node name="Dandelions2" type="MeshInstance3D" parent="." groups=["white_flowers"]]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 1)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
@@ -247,7 +250,7 @@ script = ExtResource("4_5ktjh")
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_7mgta")
 
-[node name="Dandelions3" type="MeshInstance3D" parent="."]
+[node name="Dandelions3" type="MeshInstance3D" parent="." groups=["white_flowers"]]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 1.2)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
@@ -258,7 +261,7 @@ script = ExtResource("4_5ktjh")
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_pksu1")
 
-[node name="Dandelions4" type="MeshInstance3D" parent="."]
+[node name="Dandelions4" type="MeshInstance3D" parent="." groups=["white_flowers"]]
 transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, -0.539, 1.56, 0.6)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
@@ -269,7 +272,7 @@ script = ExtResource("4_5ktjh")
 transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_lonr1")
 
-[node name="Dandelions5" type="MeshInstance3D" parent="."]
+[node name="Dandelions5" type="MeshInstance3D" parent="." groups=["red_flower", "white_flowers"]]
 transform = Transform3D(0.600643, 0, -0.449142, 0, 0.75, 0, 0.449142, 0, 0.600643, 0.93311, 0.198862, 1.74848)
 mesh = ExtResource("2_irm7l")
 script = ExtResource("4_5ktjh")
@@ -294,12 +297,9 @@ horizontal_alignment = 1
 vertical_alignment = 2
 script = ExtResource("7_lonr1")
 
-[node name="Player2" type="RigidBody3D" parent="."]
+[node name="Player2" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.552867, 2, -0.0759002)
-lock_rotation = true
-linear_damp = 5.0
-angular_damp = 5.0
-script = ExtResource("2_d1q0w")
+script = ExtResource("8_dp8vw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player2"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
@@ -320,3 +320,7 @@ mesh = SubResource("CylinderMesh_pksu1")
 
 [node name="RodTip" type="Marker3D" parent="Player2/FishingRod"]
 transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Player2"]
+
+[node name="GridMap2" type="GridMap" parent="."]
