@@ -308,8 +308,8 @@ horizontal_alignment = 1
 vertical_alignment = 2
 script = ExtResource("7_lonr1")
 
-[node name="Player2" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.552867, 2, -0.0759002)
+[node name="Player2" type="CharacterBody3D" parent="." groups=["Player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.589619, 1.98549, 0)
 script = ExtResource("8_dp8vw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player2"]

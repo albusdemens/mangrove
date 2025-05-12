@@ -1,122 +1,92 @@
 extends CharacterBody3D
 
-enum State {IDLE, COLLECT_GEMS, COLLECT_FLOWERS, TRY_RED_FLOWER, FISH_GEM}
-
-@export var move_speed = 3.0
-@export var rotation_speed = 5.0
-@export var arrival_distance = 0.5
+@export var gravity = -9.8
+@export var speed = 2.0
+@export var target_reach_distance = 0.5
 
 @onready var nav_agent = $NavigationAgent3D
 
-var current_state = State.IDLE
 var current_target = null
-var targets = {
-	"gems": [],
-	"flowers": [],
-	"red_flower": null,
-	"fish_spot": null
-}
 
 func _ready():
-	# Get all the collectable objects and store them
-	var gems = get_tree().get_nodes_in_group("blue_gems")
-	var flowers = get_tree().get_nodes_in_group("white_flowers")
+	# Wait for the scene tree to be ready
+	await get_tree().process_frame
 	
-	# Handle case where groups might be empty with safe fallbacks
-	var red_flowers = get_tree().get_nodes_in_group("red_flower")
-	var fish_spots = get_tree().get_nodes_in_group("fishing_spot")
+	# Set up the navigation agent
+	nav_agent.debug_enabled = true  # Enable path visualization
 	
-	targets["gems"] = gems
-	targets["flowers"] = flowers
-	
-	# Use first item or null if not available
-	targets["red_flower"] = red_flowers[0] if red_flowers.size() > 0 else null
-	targets["fish_spot"] = fish_spots[0] if fish_spots.size() > 0 else null
-	
-	# Add a custom signal for navigation completion
-	if not nav_agent.has_signal("navigation_finished"):
-		nav_agent.add_user_signal("navigation_finished")
-	
-	# Start the state machine
-	transition_to(State.COLLECT_GEMS)
+	# Find a valid gem target and move toward it
+	find_next_gem_target()
 
 func _physics_process(delta):
-	match current_state:
-		State.IDLE:
-			pass
-		State.COLLECT_GEMS, State.COLLECT_FLOWERS, State.TRY_RED_FLOWER, State.FISH_GEM:
-			navigate_to_target(delta)
-
-func transition_to(new_state):
-	current_state = new_state
+	# Apply gravity
+	if not is_on_floor():
+		velocity.y += gravity * delta
 	
-	match new_state:
-		State.COLLECT_GEMS:
-			if targets["gems"].size() > 0:
-				current_target = targets["gems"][0]
-				set_navigation_target(current_target.global_position)
-			else:
-				transition_to(State.COLLECT_FLOWERS)
-		State.COLLECT_FLOWERS:
-			if targets["flowers"].size() > 0:
-				current_target = targets["flowers"][0]
-				set_navigation_target(current_target.global_position)
-			else:
-				transition_to(State.TRY_RED_FLOWER)
-		State.TRY_RED_FLOWER:
-			current_target = targets["red_flower"]
-			set_navigation_target(current_target.global_position)
-			# After a delay, simulate failure and move to next state
-			await get_tree().create_timer(3.0).timeout
-			transition_to(State.FISH_GEM)
-		State.FISH_GEM:
-			current_target = targets["fish_spot"]
-			set_navigation_target(current_target.global_position)
-			# Wait until we reach the fishing spot
-			await nav_agent.navigation_finished
-			# Start fishing
-			if current_target.has_method("start_fishing"):
-				var success = await current_target.start_fishing(self)
-				print("Fishing result: ", "Success" if success else "Failure")
-				# Wait a bit before looking for new targets
-				await get_tree().create_timer(2.0).timeout
-				# Go back to collecting gems (which might include the one we just fished)
-				transition_to(State.COLLECT_GEMS)
+	if not nav_agent.is_navigation_finished():
+		# Get the next path position to move toward
+		var next_path_position = nav_agent.get_next_path_position()
+		
+		# Calculate direction to the next path position (keep Y velocity for gravity)
+		var y_velocity = velocity.y
+		var direction = (next_path_position - global_position).normalized()
+		
+		# Set velocity (preserve gravity effect)
+		velocity = direction * speed
+		velocity.y = y_velocity
+		
+		# Move the character
+		move_and_slide()
+	elif current_target:
+		# Check if we've reached the target
+		var distance_to_target = global_position.distance_to(current_target.global_position)
+		if distance_to_target < target_reach_distance:
+			print("Reached the gem!")
+			# Collect the gem
+			collect_gem(current_target)
+			
+					# Find next gem
+			find_next_gem_target()
 
-func set_navigation_target(target_pos):
-	nav_agent.set_target_position(target_pos)
+func set_target_location(target_pos):
+	nav_agent.target_position = target_pos
 
-func navigate_to_target(delta):
-	if nav_agent.is_navigation_finished():
-		if current_state == State.COLLECT_GEMS and current_target in targets["gems"]:
-			# Remove collected gem
-			targets["gems"].erase(current_target)
-			current_target.queue_free()
-			transition_to(State.COLLECT_GEMS)
-		elif current_state == State.COLLECT_FLOWERS and current_target in targets["flowers"]:
-			# Remove collected flower
-			targets["flowers"].erase(current_target)
-			current_target.queue_free()
-			transition_to(State.COLLECT_FLOWERS)
-		# Emit signal that navigation is finished (for the fishing state)
-		nav_agent.emit_signal("navigation_finished")
-		return
+func collect_gem(gem):
+	# Check if the gem has the CollectibleResource script
+	if gem.has_method("collect"):
+		gem.collect(self)
+	else:
+		# If not, just remove it from the scene
+		gem.queue_free()
 	
-	var next_path_pos = nav_agent.get_next_path_position()
-	var direction = (next_path_pos - global_position).normalized()
-	
-	# Look at the direction we're moving
-	if direction:
-		var look_direction = direction
-		look_direction.y = 0
-		if look_direction.length() > 0.01:
-			var target_rotation = atan2(look_direction.x, look_direction.z)
-			rotation.y = lerp_angle(rotation.y, target_rotation, delta * rotation_speed)
-	
-	# Move towards the target
-	velocity = direction * move_speed
-	move_and_slide()
+	# You could add visual/sound effects here
+	print("Gem collected!")
 
-func collect_item(item):
-	# Animation or effect for collecting
-	item.queue_free()
+# Method that will be called by CollectibleResource script
+func collect_resource(points, is_crystal):
+	print("Collected resource: ", points, " points, Crystal: ", is_crystal)
+	# You could add score tracking or other functionality here
+
+func find_next_gem_target():
+	# Find all gems in the scene
+	var gems = get_tree().get_nodes_in_group("blue_gems")
+	
+	# Find the closest gem
+	var closest_gem = null
+	var closest_distance = INF
+	
+	for gem in gems:
+		var distance = global_position.distance_to(gem.global_position)
+		if distance < closest_distance:
+			closest_gem = gem
+			closest_distance = distance
+	
+	# If we found a gem, set it as the target
+	if closest_gem != null:
+		current_target = closest_gem
+		set_target_location(current_target.global_position)
+		print("Found new gem target: ", current_target.name)
+	else:
+		# No more gems to collect
+		current_target = null
+		print("No gems found to collect!")
