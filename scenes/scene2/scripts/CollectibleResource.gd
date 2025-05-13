@@ -53,10 +53,15 @@ func _on_body_entered(body):
 		if not is_crystal:  # Only flowers disappear
 			queue_free()
 
-# Called by the fishing system when caught by the bobber
+# Called also by the fishing system when caught by the bobber
 func collect(collector):
 	if collector.has_method("collect_resource"):
 		collector.collect_resource(points, is_crystal)
-		if not is_crystal:  # Only flowers disappear
+		
+		# Special case for player_2 collecting crystals
+		if is_crystal and collector.name == "Player2":
+			queue_free()  # Make crystal disappear for player_2
+		elif not is_crystal:  # Normal flower collection
 			queue_free()
+			
 	print("Resource collected by: ", collector.name)
