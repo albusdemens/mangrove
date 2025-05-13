@@ -1,92 +1,45 @@
-extends CharacterBody3D
+extends Node3D
 
-@export var gravity = -9.8
-@export var speed = 2.0
-@export var target_reach_distance = 0.5
+# Define your gem locations
+var gem_1_position = Vector3(-0.071, 1.55, 0.95)  # Replace with actual position
+var gem_2_position = Vector3(0.845, 1.55, 0.14)  # Replace with actual position
 
-@onready var nav_agent = $NavigationAgent3D
-
-var current_target = null
+var current_target = 0  # 0 = first gem, 1 = second gem
+var movement_speed = 0.35
+var time_since_start = 0.0
 
 func _ready():
-	# Wait for the scene tree to be ready
-	await get_tree().process_frame
-	
-	# Set up the navigation agent
-	nav_agent.debug_enabled = true  # Enable path visualization
-	
-	# Find a valid gem target and move toward it
-	find_next_gem_target()
+	print("Ultra simple movement script initialized")
 
-func _physics_process(delta):
-	# Apply gravity
-	if not is_on_floor():
-		velocity.y += gravity * delta
+func _process(delta):
+	time_since_start += delta
 	
-	if not nav_agent.is_navigation_finished():
-		# Get the next path position to move toward
-		var next_path_position = nav_agent.get_next_path_position()
+	# Print debug information
+	if int(time_since_start) % 2 == 0:  # Every 2 seconds
+		print("Current position: ", global_position, " | Target: ", current_target)
+	
+	# Determine target position
+	var target_position = gem_1_position if current_target == 0 else gem_2_position
+	
+	# Calculate distance to target
+	var distance = global_position.distance_to(target_position)
+	print("Distance to target: ", distance)
+	
+	# Check if we've reached the target
+	if distance < 0.05:
+		print("Reached target ", current_target)
+		# Collect gem logic would go here
 		
-		# Calculate direction to the next path position (keep Y velocity for gravity)
-		var y_velocity = velocity.y
-		var direction = (next_path_position - global_position).normalized()
-		
-		# Set velocity (preserve gravity effect)
-		velocity = direction * speed
-		velocity.y = y_velocity
-		
-		# Move the character
-		move_and_slide()
-	elif current_target:
-		# Check if we've reached the target
-		var distance_to_target = global_position.distance_to(current_target.global_position)
-		if distance_to_target < target_reach_distance:
-			print("Reached the gem!")
-			# Collect the gem
-			collect_gem(current_target)
-			
-					# Find next gem
-			find_next_gem_target()
-
-func set_target_location(target_pos):
-	nav_agent.target_position = target_pos
-
-func collect_gem(gem):
-	# Check if the gem has the CollectibleResource script
-	if gem.has_method("collect"):
-		gem.collect(self)
-	else:
-		# If not, just remove it from the scene
-		gem.queue_free()
+		# Move to next target
+		current_target += 1
+		if current_target > 1:
+			print("All targets reached")
+			set_process(false)  # Stop processing
+			return
 	
-	# You could add visual/sound effects here
-	print("Gem collected!")
-
-# Method that will be called by CollectibleResource script
-func collect_resource(points, is_crystal):
-	print("Collected resource: ", points, " points, Crystal: ", is_crystal)
-	# You could add score tracking or other functionality here
-
-func find_next_gem_target():
-	# Find all gems in the scene
-	var gems = get_tree().get_nodes_in_group("blue_gems")
+	# Move directly toward target (no physics)
+	var direction = (target_position - global_position).normalized()
+	global_position += direction * movement_speed * delta
 	
-	# Find the closest gem
-	var closest_gem = null
-	var closest_distance = INF
-	
-	for gem in gems:
-		var distance = global_position.distance_to(gem.global_position)
-		if distance < closest_distance:
-			closest_gem = gem
-			closest_distance = distance
-	
-	# If we found a gem, set it as the target
-	if closest_gem != null:
-		current_target = closest_gem
-		set_target_location(current_target.global_position)
-		print("Found new gem target: ", current_target.name)
-	else:
-		# No more gems to collect
-		current_target = null
-		print("No gems found to collect!")
+	# Ensure Y position is locked
+	global_position.y = 1.55
