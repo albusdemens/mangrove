@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://ck1m4q2hwt1mj"]
+
+[ext_resource type="ArrayMesh" uid="uid://bpcv06c2i7et4" path="res://models/godot_mountain.obj" id="1_i7vr0"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_flvle"]
+sky_top_color = Color(1, 0.960784, 0.619608, 1)
+sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
+ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
+ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="Sky" id="Sky_ogt5y"]
+sky_material = SubResource("ProceduralSkyMaterial_flvle")
+
+[sub_resource type="Environment" id="Environment_0cgex"]
+background_mode = 2
+background_color = Color(0.780392, 0.262745, 0, 1)
+sky = SubResource("Sky_ogt5y")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i7vr0"]
+albedo_color = Color(1, 0.701961, 0.941176, 1)
+
+[node name="MountainScene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0cgex")
+
+[node name="GodotMountain" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_i7vr0")
+mesh = ExtResource("1_i7vr0")

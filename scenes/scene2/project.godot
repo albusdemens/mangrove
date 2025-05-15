@@ -24,6 +24,10 @@ window/size/viewport_height=1920
 
 project/assembly_name="scene2"
 
+[editor]
+
+movie_writer/movie_file="/home/albus/Desktop/gameplay_video.avi"
+
 [input]
 
 move_right={
