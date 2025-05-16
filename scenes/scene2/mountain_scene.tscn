@@ -9,13 +9,13 @@ sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
 ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
 ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
 
-[sub_resource type="Sky" id="Sky_ogt5y"]
+[sub_resource type="Sky" id="Sky_flvle"]
 sky_material = SubResource("ProceduralSkyMaterial_flvle")
 
 [sub_resource type="Environment" id="Environment_0cgex"]
 background_mode = 2
 background_color = Color(0.780392, 0.262745, 0, 1)
-sky = SubResource("Sky_ogt5y")
+sky = SubResource("Sky_flvle")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0cgex"]
 render_priority = 0
@@ -71,7 +71,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.84399)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.906308, 0, -0.422618, 0, 1, 0, 0.422618, 0, 0.906308, -0.570528, 0.405729, 1.36709)
-current = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Camera3D"]
 libraries = {

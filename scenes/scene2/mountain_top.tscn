@@ -1,0 +1,89 @@
+[gd_scene load_steps=16 format=3 uid="uid://ln6inrpq7uyl"]
+
+[ext_resource type="Shader" uid="uid://babp71s1wsreb" path="res://shaders/scene_2.gdshader" id="1_82lse"]
+[ext_resource type="ArrayMesh" uid="uid://bpcv06c2i7et4" path="res://models/godot_mountain.obj" id="2_4dcob"]
+[ext_resource type="ArrayMesh" uid="uid://dxue44yomb1ja" path="res://models/Mountain_godot_4.obj" id="3_5wmwt"]
+[ext_resource type="ArrayMesh" uid="uid://xrx10s6fa883" path="res://models/Mountain_godot_3.obj" id="4_kr6oy"]
+[ext_resource type="ArrayMesh" uid="uid://berv5n772vkcc" path="res://models/Mountain_godot_2.obj" id="5_5640w"]
+[ext_resource type="ArrayMesh" uid="uid://bwmfe28rdywed" path="res://models/Mountain_godot_1.obj" id="6_tbbcb"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3weq4"]
+sky_top_color = Color(1, 0.960784, 0.619608, 1)
+sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
+ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
+ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="Sky" id="Sky_ogt5y"]
+sky_material = SubResource("ProceduralSkyMaterial_3weq4")
+
+[sub_resource type="Environment" id="Environment_dcq3k"]
+background_mode = 2
+background_color = Color(0.780392, 0.262745, 0, 1)
+sky = SubResource("Sky_ogt5y")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_5wmwt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kr6oy"]
+render_priority = 0
+shader = ExtResource("1_82lse")
+shader_parameter/low_color = Color(0.9, 0.7, 0.9, 1)
+shader_parameter/mid_color = Color(0.7, 0.3, 0.7, 1)
+shader_parameter/high_color = Color(0.4, 0, 0.4, 1)
+shader_parameter/min_height = 0.0
+shader_parameter/max_height = 20.0
+shader_parameter/use_contour_lines = false
+shader_parameter/contour_spacing = 0.05
+shader_parameter/contour_thickness = 0.005
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5wmwt"]
+albedo_color = Color(0.560784, 0.211765, 0.211765, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kr6oy"]
+albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5640w"]
+albedo_color = Color(0.321569, 0.560784, 0.211765, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tbbcb"]
+albedo_color = Color(0.478431, 0.211765, 0.560784, 1)
+
+[node name="Mountain_top" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dcq3k")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.220473, -0.97352, -0.0604109, 0.0207438, -0.0666007, 0.997564, -0.975172, 0.218683, 0.0348782, 0.1, 1.25, 0.1)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(0.984808, -0.173648, -7.5904e-09, 0, -4.37114e-08, 1, -0.173648, -0.984808, -4.30473e-08, 0, 0, 0)
+shape = SubResource("ConcavePolygonShape3D_5wmwt")
+debug_color = Color(0.574896, 0.417269, 0.930862, 0.42)
+
+[node name="GodotMountain" type="MeshInstance3D" parent="StaticBody3D/CollisionShape3D"]
+transform = Transform3D(1, -1.49012e-08, 0, 1.49012e-08, 1, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_kr6oy")
+mesh = ExtResource("2_4dcob")
+skeleton = NodePath("../../..")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.64858, 0)
+
+[node name="MountainGodot4" type="MeshInstance3D" parent="."]
+mesh = ExtResource("3_5wmwt")
+surface_material_override/0 = SubResource("StandardMaterial3D_5wmwt")
+
+[node name="MountainGodot3" type="MeshInstance3D" parent="."]
+mesh = ExtResource("4_kr6oy")
+surface_material_override/0 = SubResource("StandardMaterial3D_kr6oy")
+
+[node name="MountainGodot2" type="MeshInstance3D" parent="."]
+mesh = ExtResource("5_5640w")
+surface_material_override/0 = SubResource("StandardMaterial3D_5640w")
+
+[node name="MountainGodot1" type="MeshInstance3D" parent="."]
+mesh = ExtResource("6_tbbcb")
+surface_material_override/0 = SubResource("StandardMaterial3D_tbbcb")

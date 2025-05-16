@@ -8,6 +8,8 @@ extends Camera3D
 var target: Node3D
 
 func _ready():
+	# In scene_2_gameplay.gd, remember to set which camera to use
+	#current = true
 	if target_path:
 		target = get_node(target_path)
 

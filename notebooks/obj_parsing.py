@@ -5,7 +5,7 @@ Godot-Friendly Histogram Generator
 Creates a histogram OBJ file with connected columns (no gaps).
 """
 
-def fix_histogram_for_godot(input_file="Histogram_Columns_quadrant_neg_X_neg_Y.obj", output_file="histogram_godot.obj"):
+def fix_histogram_for_godot(input_file="Histogram_Columns_quadrant_neg_X_neg_Y.obj", output_file="Mountain_godot_4.obj"):
     # Read the file
     vertices = []
     faces = []

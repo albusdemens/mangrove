@@ -6,7 +6,12 @@ var flower_scene = preload("res://grown_flower_tile.tscn")
 
 # References
 @onready var grid_map = $GridMap
-@onready var camera = $Camera3D
+
+# Set which camera to use. This should agree with what is set
+# in the Inspector
+#@onready var camera = $Camera3D
+@onready var camera = $Player1/Player1_cam
+
 @onready var overhead_camera = null  # Will be initialized in _ready if it exists
 @onready var ui_node = $UI  # Reference to the UI node
 # We'll find ResourceCounter dynamically in _ready()

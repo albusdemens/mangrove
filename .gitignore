@@ -30,10 +30,7 @@ notebooks/mountain_split_bottom_right.obj
 .gitignore
 notebooks/mountain_split_top_right.obj
 notebooks/mountain_split_top_left.obj
-blender/histogram_quadrants/Histogram_Columns_quadrant_neg_X_neg_Y.obj
-blender/histogram_quadrants/Histogram_Columns_quadrant_neg_X_pos_Y.obj
-blender/histogram_quadrants/Histogram_Columns_quadrant_pos_X_neg_Y.obj
-blender/histogram_quadrants/Histogram_Columns_quadrant_pos_X_pos_Y.obj
+blender/histogram_quadrants/*.obj
 blender/normalized_histogram_slice_1.obj
 scenes/scene2/Histogram_Columns_quadrant_neg_X_neg_Y.obj
 scenes/scene2/mountain_quadrant_nw.obj
@@ -52,3 +49,4 @@ scenes/scene2/histogram_split.obj
 scenes/scene2/models/histogram_godot.obj
 scenes/scene2/output_video.avi
 scenes/scene2/output_video.avi
+notebooks/*.obj
