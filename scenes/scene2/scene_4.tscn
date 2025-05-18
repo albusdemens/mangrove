@@ -1,0 +1,111 @@
+[gd_scene load_steps=17 format=3 uid="uid://kj63q65iyycn"]
+
+[ext_resource type="ArrayMesh" uid="uid://bpcv06c2i7et4" path="res://models/godot_mountain.obj" id="2_hbkxh"]
+[ext_resource type="Script" uid="uid://nhmdn12qv0v8" path="res://scripts/player_1.gd" id="3_b5w26"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b5w26"]
+sky_top_color = Color(1, 0.960784, 0.619608, 1)
+sky_horizon_color = Color(1, 0.980392, 0.803922, 1)
+ground_bottom_color = Color(0.780392, 0.262745, 0, 1)
+ground_horizon_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="Sky" id="Sky_flvle"]
+sky_material = SubResource("ProceduralSkyMaterial_b5w26")
+
+[sub_resource type="Environment" id="Environment_ijncq"]
+background_mode = 2
+background_color = Color(0.780392, 0.262745, 0, 1)
+sky = SubResource("Sky_flvle")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qdk8v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pcsya"]
+render_priority = 1
+albedo_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tanov"]
+albedo_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bcpvq"]
+
+[sub_resource type="Skin" id="Skin_v0lkj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_roa47"]
+render_priority = 1
+albedo_color = Color(0.780392, 0.262745, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hgmne"]
+albedo_color = Color(1, 0.701961, 0.941176, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hgmne"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rhpos"]
+albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hbkxh"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_b5w26"]
+
+[node name="scene4" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ijncq")
+
+[node name="BasePlane" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BasePlane"]
+transform = Transform3D(20, 0, 0, 0, 0.1, 0, 0, 0, 20, 0, -5, 0)
+shape = SubResource("BoxShape3D_qdk8v")
+disabled = true
+debug_color = Color(0.780392, 0.262745, 0, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BasePlane"]
+transform = Transform3D(20, 0, 0, 0, 0.1, 0, 0, 0, 20, 0, -5, 0)
+material_override = SubResource("StandardMaterial3D_pcsya")
+material_overlay = SubResource("StandardMaterial3D_tanov")
+mesh = SubResource("BoxMesh_bcpvq")
+skin = SubResource("Skin_v0lkj")
+surface_material_override/0 = SubResource("StandardMaterial3D_roa47")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.72434, 11.5902)
+
+[node name="Mountain" type="MeshInstance3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 1.19249e-07, 10, 0, -10, 1.19249e-07, 0, -5, 0)
+mesh = ExtResource("2_hbkxh")
+surface_material_override/0 = SubResource("StandardMaterial3D_hgmne")
+
+[node name="Player1" type="RigidBody3D" parent="." groups=["Player"]]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+script = ExtResource("3_b5w26")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -9.291, 50, 0)
+mesh = SubResource("BoxMesh_hgmne")
+surface_material_override/0 = SubResource("StandardMaterial3D_rhpos")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player1"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -9.291, 50, 0)
+shape = SubResource("BoxShape3D_hbkxh")
+
+[node name="FishingRod" type="Node3D" parent="Player1"]
+transform = Transform3D(1, 0, 0, 0, 0.819152, -0.573577, 0, 0.573577, 0.819152, 0, 0, 0.265986)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player1/FishingRod"]
+transform = Transform3D(0.025, 0, 0, 0, 0.248192, -0.00300126, 0, 0.0300126, 0.0248192, 0.0598988, 0.128247, -0.217751)
+mesh = SubResource("CylinderMesh_b5w26")
+
+[node name="RodTip" type="Marker3D" parent="Player1/FishingRod"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Player1"]
+path_desired_distance = 0.5
+target_desired_distance = 0.5
+path_max_distance = 50.0
+debug_enabled = true
+debug_use_custom = true
+debug_path_custom_color = Color(1, 0.0666667, 0, 1)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.05862, 0.88008)
