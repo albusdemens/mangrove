@@ -1,0 +1,81 @@
+[gd_scene load_steps=16 format=3 uid="uid://cje6c6yammnu5"]
+
+[ext_resource type="Script" uid="uid://cqk3sv4tellkh" path="res://scripts/InfoScreen.gd" id="1_iyveo"]
+[ext_resource type="Script" uid="uid://b3vdlnapfuvdl" path="res://scripts/PlayerAutoDemo.gd" id="1_wosn6"]
+[ext_resource type="Script" uid="uid://bj0gaebboqnxr" path="res://scripts/FloatingText.gd" id="2_rhvcf"]
+[ext_resource type="Texture2D" uid="uid://blccukfpqwonv" path="res://textures/posted_texture.png" id="2_wosn6"]
+[ext_resource type="Texture2D" uid="uid://mv0vouwvijel" path="res://textures/post_button_texture.PNG" id="3_6og6j"]
+[ext_resource type="Texture2D" uid="uid://bmjvy85x0t634" path="res://textures/newspaper_texture.png" id="3_g7rja"]
+[ext_resource type="AudioStream" uid="uid://b080xnt407btm" path="res://audio/posted_sound.wav" id="5_g7rja"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iyveo"]
+albedo_color = Color(0.230851, 0.460418, 0.992619, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wosn6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uv4ue"]
+albedo_texture = ExtResource("3_6og6j")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2wnap"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wosn6"]
+albedo_texture = ExtResource("2_wosn6")
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.2
+uv1_scale = Vector3(3, 2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_iyveo"]
+size = Vector3(2, 2, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g7rja"]
+albedo_color = Color(2.02149e-06, 0.64671, 0.256903, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_rhvcf"]
+
+[node name="Scene5" type="Node3D"]
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47282, -0.111366, 1.62727)
+script = ExtResource("1_wosn6")
+move_speed = 2.0
+info_screen_path = NodePath("../InfoScreen")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 0.969205, 0.246255, 0, -0.246255, 0.969205, 0, 0.71684, 1.35263)
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(0.299985, 0, 0.00301587, 0, 0.3, 0, -0.00301587, 0, 0.299985, 0, 0.280472, 0)
+material_override = SubResource("StandardMaterial3D_iyveo")
+mesh = SubResource("BoxMesh_wosn6")
+
+[node name="FloatingText" type="Label3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.861799, -1)
+script = ExtResource("2_rhvcf")
+
+[node name="PostButton" type="MeshInstance3D" parent="Player/FloatingText"]
+transform = Transform3D(0.15, 0, 0, 0, -6.55671e-09, -0.15, 0, 0.15, -6.55671e-09, 0, -0.3, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_uv4ue")
+mesh = SubResource("PlaneMesh_2wnap")
+
+[node name="InfoScreen" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24803, -2.74428)
+script = ExtResource("1_iyveo")
+newspaper_texture = ExtResource("3_g7rja")
+posting_texture = ExtResource("2_wosn6")
+interaction_sound = ExtResource("5_g7rja")
+
+[node name="ScreenMesh" type="MeshInstance3D" parent="InfoScreen"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.231228, 0)
+material_override = SubResource("StandardMaterial3D_wosn6")
+mesh = SubResource("BoxMesh_iyveo")
+
+[node name="GroundMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_g7rja")
+mesh = SubResource("PlaneMesh_rhvcf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.951179, 0.0997654, -0.29207, 0.00458879, 0.94164, 0.336591, 0.308604, -0.321498, 0.895211, -9.63261, 1.68183, 5.58082)
+shadow_enabled = true
