@@ -5,6 +5,7 @@ func _ready():
 	# No debug visualization
 	# get_viewport().set_debug_draw(3)  # Commented out to avoid warning
 	
+	add_to_group("mountain")
 	# Ensure collision is sized appropriately
 	for child in get_children():
 		if child is CollisionShape3D:

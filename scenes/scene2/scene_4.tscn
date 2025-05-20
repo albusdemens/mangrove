@@ -1,7 +1,8 @@
-[gd_scene load_steps=19 format=3 uid="uid://kj63q65iyycn"]
+[gd_scene load_steps=32 format=3 uid="uid://kj63q65iyycn"]
 
 [ext_resource type="ArrayMesh" uid="uid://bpcv06c2i7et4" path="res://models/godot_mountain.obj" id="2_hbkxh"]
 [ext_resource type="Script" uid="uid://c1pngybgv2vgk" path="res://scripts/MountainCollision.gd" id="2_rhpos"]
+[ext_resource type="Script" uid="uid://ctmo4p6axb66c" path="res://scripts/player_1_S4.gd" id="3_hbkxh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b5w26"]
 sky_top_color = Color(1, 0.960784, 0.619608, 1)
@@ -51,6 +52,36 @@ albedo_color = Color(0.101961, 0.372549, 0.619608, 1)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_b5w26"]
 
+[sub_resource type="BoxMesh" id="BoxMesh_rhpos"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hbkxh"]
+albedo_color = Color(0.560784, 0.211765, 0.211765, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b5w26"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ijncq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ro7g"]
+albedo_color = Color(0.227451, 0.431373, 0.560784, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1cl27"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hbkxh"]
+lightmap_size_hint = Vector2i(14, 21)
+add_uv2 = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b5w26"]
+albedo_color = Color(0.321569, 0.560784, 0.211765, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ijncq"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_8ro7g"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1cl27"]
+albedo_color = Color(0.478431, 0.211765, 0.560784, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pcsya"]
+
 [node name="scene4" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -92,7 +123,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_hgmne")
 shape = SubResource("ConcavePolygonShape3D_rhpos")
 
 [node name="Player1" type="RigidBody3D" parent="." groups=["Player"]]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.2, 31, 0)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -1, 31, 0.8)
+script = ExtResource("3_hbkxh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player1"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
@@ -125,6 +157,152 @@ debug_path_custom_color = Color(1, 0.0666667, 0, 1)
 [node name="Camera3D-P1" type="Camera3D" parent="Player1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 
+[node name="Player2" type="RigidBody3D" parent="." groups=["Player"]]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, -1.22, 31, -0.8)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("BoxMesh_hgmne")
+surface_material_override/0 = SubResource("StandardMaterial3D_rhpos")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player2"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_hbkxh")
+
+[node name="FishingRod" type="Node3D" parent="Player2"]
+transform = Transform3D(1, 0, 0, 0, 0.819152, -0.573577, 0, 0.573577, 0.819152, 0, 0, 0.265986)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player2/FishingRod"]
+transform = Transform3D(0.025, 0, 0, 0, 0.248192, -0.00300126, 0, 0.0300126, 0.0248192, 0.0598988, 0.128247, -0.217751)
+mesh = SubResource("CylinderMesh_b5w26")
+
+[node name="RodTip" type="Marker3D" parent="Player2/FishingRod"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Player2"]
+path_desired_distance = 0.5
+target_desired_distance = 0.5
+path_max_distance = 50.0
+debug_enabled = true
+debug_use_custom = true
+debug_path_custom_color = Color(1, 0.0666667, 0, 1)
+
+[node name="Camera3D-P1" type="Camera3D" parent="Player2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
+[node name="Player3" type="RigidBody3D" parent="." groups=["Player"]]
+transform = Transform3D(0.001, 0, 0, 0, 0.001, 0, 0, 0, 0.001, -2, 31, -0.2)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("BoxMesh_hgmne")
+surface_material_override/0 = SubResource("StandardMaterial3D_rhpos")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player3"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_hbkxh")
+
+[node name="FishingRod" type="Node3D" parent="Player3"]
+transform = Transform3D(1, 0, 0, 0, 0.819152, -0.573577, 0, 0.573577, 0.819152, 0, 0, 0.265986)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player3/FishingRod"]
+transform = Transform3D(0.025, 0, 0, 0, 0.248192, -0.00300126, 0, 0.0300126, 0.0248192, 0.0598988, 0.128247, -0.217751)
+mesh = SubResource("CylinderMesh_b5w26")
+
+[node name="RodTip" type="Marker3D" parent="Player3/FishingRod"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Player3"]
+path_desired_distance = 0.5
+target_desired_distance = 0.5
+path_max_distance = 50.0
+debug_enabled = true
+debug_use_custom = true
+debug_path_custom_color = Color(1, 0.0666667, 0, 1)
+
+[node name="Camera3D-P1" type="Camera3D" parent="Player3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
+[node name="Player4" type="RigidBody3D" parent="." groups=["Player"]]
+transform = Transform3D(1e-06, 0, 0, 0, 1e-06, 0, 0, 0, 1e-06, -2.8, 31, 0.6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("BoxMesh_hgmne")
+surface_material_override/0 = SubResource("StandardMaterial3D_rhpos")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player4"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_hbkxh")
+
+[node name="FishingRod" type="Node3D" parent="Player4"]
+transform = Transform3D(1, 0, 0, 0, 0.819152, -0.573577, 0, 0.573577, 0.819152, 0, 0, 0.265986)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player4/FishingRod"]
+transform = Transform3D(0.025, 0, 0, 0, 0.248192, -0.00300126, 0, 0.0300126, 0.0248192, 0.0598988, 0.128247, -0.217751)
+mesh = SubResource("CylinderMesh_b5w26")
+
+[node name="RodTip" type="Marker3D" parent="Player4/FishingRod"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0.0617265, 0.374153, -0.18581)
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Player4"]
+path_desired_distance = 0.5
+target_desired_distance = 0.5
+path_max_distance = 50.0
+debug_enabled = true
+debug_use_custom = true
+debug_path_custom_color = Color(1, 0.0666667, 0, 1)
+
+[node name="Camera3D-P1" type="Camera3D" parent="Player4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
 [node name="Camera3D2" type="Camera3D" parent="."]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 5, 30, 1.253)
+transform = Transform3D(0.5, 0, 0.866026, 0, 1, 0, -0.866026, 0, 0.5, 5, 27, 2)
 current = true
+
+[node name="Base1-red" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 30, 30)
+gravity_scale = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Base1-red"]
+mesh = SubResource("BoxMesh_rhpos")
+surface_material_override/0 = SubResource("StandardMaterial3D_hbkxh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Base1-red"]
+shape = SubResource("BoxShape3D_b5w26")
+
+[node name="Base2-blue" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 30, -30)
+gravity_scale = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Base2-blue"]
+mesh = SubResource("BoxMesh_ijncq")
+surface_material_override/0 = SubResource("StandardMaterial3D_8ro7g")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Base2-blue"]
+shape = SubResource("BoxShape3D_1cl27")
+
+[node name="Base3-green" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 30, 30)
+gravity_scale = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Base3-green"]
+mesh = SubResource("BoxMesh_hbkxh")
+surface_material_override/0 = SubResource("StandardMaterial3D_b5w26")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Base3-green"]
+shape = SubResource("BoxShape3D_ijncq")
+
+[node name="Base4-purple" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 30, -30)
+gravity_scale = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Base4-purple"]
+mesh = SubResource("BoxMesh_8ro7g")
+surface_material_override/0 = SubResource("StandardMaterial3D_1cl27")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Base4-purple"]
+shape = SubResource("BoxShape3D_pcsya")
