@@ -1,0 +1,233 @@
+[gd_scene load_steps=31 format=3 uid="uid://cje6c6yammnu5"]
+
+[ext_resource type="Script" uid="uid://b3vdlnapfuvdl" path="res://scripts/PlayerAutoDemo.gd" id="1_onanq"]
+[ext_resource type="Script" uid="uid://bj0gaebboqnxr" path="res://scripts/FloatingText.gd" id="2_ewagk"]
+[ext_resource type="Texture2D" uid="uid://mv0vouwvijel" path="res://textures/post_button_texture.PNG" id="3_yqcut"]
+[ext_resource type="Texture2D" uid="uid://di0ake6hpmo7p" path="res://textures/accept_button_texture.PNG" id="4_ewagk"]
+[ext_resource type="Script" uid="uid://cqk3sv4tellkh" path="res://scripts/InfoScreen.gd" id="4_iadbr"]
+[ext_resource type="Texture2D" uid="uid://bmjvy85x0t634" path="res://textures/newspaper_texture.png" id="5_ywoti"]
+[ext_resource type="Texture2D" uid="uid://blccukfpqwonv" path="res://textures/posted_texture.png" id="6_m2gdp"]
+[ext_resource type="AudioStream" uid="uid://b080xnt407btm" path="res://audio/posted_sound.wav" id="7_xh0us"]
+[ext_resource type="Script" uid="uid://kosej8qbdtqu" path="res://FloatingChoices.gd" id="8_iadbr"]
+[ext_resource type="Texture2D" uid="uid://c46qeuiklujfr" path="res://textures/decline_button_texture.PNG" id="8_yqcut"]
+[ext_resource type="ArrayMesh" uid="uid://c8j2uu4ht32n7" path="res://assets/dandelions.obj" id="11_m2gdp"]
+[ext_resource type="ArrayMesh" uid="uid://51ouxkmxbw6n" path="res://assets/crystal.obj" id="12_xh0us"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_onanq"]
+albedo_color = Color(0, 0.481157, 0.992691, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wosn6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xh0us"]
+albedo_texture = ExtResource("3_yqcut")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2wnap"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wosn6"]
+albedo_texture = ExtResource("6_m2gdp")
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.2
+uv1_scale = Vector3(3, 2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_iyveo"]
+size = Vector3(2, 2, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g7rja"]
+albedo_color = Color(2.02149e-06, 0.64671, 0.256903, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_rhvcf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ewagk"]
+albedo_color = Color(0.910517, 0.182465, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_onanq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ywoti"]
+albedo_texture = ExtResource("4_ewagk")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m2gdp"]
+albedo_texture = ExtResource("8_yqcut")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_onanq"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 54.2
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_yqcut"]
+top_radius = 0.4
+bottom_radius = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iadbr"]
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0a5yp"]
+albedo_color = Color(1, 1, 0.054902, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vkod"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0pp2y"]
+albedo_color = Color(0.617423, 0.54064, 1, 1)
+
+[node name="Scene6" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.43453, 0)
+
+[node name="Area1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+
+[node name="Player" type="CharacterBody3D" parent="Area1" node_paths=PackedStringArray("pulse_dot", "remote_info_screen", "camera_rig", "floating_choices", "resource_a", "resource_b")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 1.47282, -0.406803, -11.777)
+script = ExtResource("1_onanq")
+info_screen_path = NodePath("../InfoScreen")
+pulse_dot = NodePath("../../PipeConnection/PulseDot")
+remote_info_screen = NodePath("../../Area2/InfoScreenB")
+camera_rig = NodePath("../../CameraRig/MainCamera")
+floating_choices = NodePath("../../Area2/PlayerB/FloatingChoices")
+resource_a = NodePath("../../PipeConnection/ResourceA")
+resource_b = NodePath("../../PipeConnection/ResourceB")
+
+[node name="Camera3D" type="Camera3D" parent="Area1/Player"]
+transform = Transform3D(1, 0, 0, 0, 0.969205, 0.246255, 0, -0.246255, 0.969205, 0, 0.71684, 1.35263)
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="Area1/Player"]
+transform = Transform3D(0.299985, 0, 0.00301587, 0, 0.3, 0, -0.00301587, 0, 0.299985, 0, 0.280472, 0)
+material_override = SubResource("StandardMaterial3D_onanq")
+mesh = SubResource("BoxMesh_wosn6")
+
+[node name="FloatingText" type="Label3D" parent="Area1/Player" node_paths=PackedStringArray("local_info_screen", "remote_info_screen")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.861799, -0.415329)
+script = ExtResource("2_ewagk")
+post_sound = ExtResource("7_xh0us")
+local_info_screen = NodePath("../../InfoScreen")
+remote_info_screen = NodePath("../../../Area2/InfoScreenB")
+
+[node name="PostButton" type="MeshInstance3D" parent="Area1/Player/FloatingText"]
+transform = Transform3D(0.15, 0, 0, 0, -6.55671e-09, -0.15, 0, 0.15, -6.55671e-09, 0, -0.3, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_xh0us")
+mesh = SubResource("PlaneMesh_2wnap")
+
+[node name="InfoScreen" type="Node3D" parent="Area1"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 1, 0, 2.49061, -15.5062)
+script = ExtResource("4_iadbr")
+newspaper_texture = ExtResource("5_ywoti")
+posting_texture = ExtResource("6_m2gdp")
+interaction_sound = ExtResource("7_xh0us")
+
+[node name="ScreenMesh" type="MeshInstance3D" parent="Area1/InfoScreen"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.231228, 0)
+material_override = SubResource("StandardMaterial3D_wosn6")
+mesh = SubResource("BoxMesh_iyveo")
+
+[node name="GroundMesh" type="MeshInstance3D" parent="Area1"]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_g7rja")
+mesh = SubResource("PlaneMesh_rhvcf")
+skeleton = NodePath("../..")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Area1"]
+transform = Transform3D(0.95118, 0.0997652, -0.292069, 0.00458879, 0.94164, 0.33659, 0.308604, -0.321498, 0.895211, -9.63261, 1.68183, 5.58082)
+shadow_enabled = true
+
+[node name="Area2" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 10, -49.9692)
+
+[node name="PlayerB" type="CharacterBody3D" parent="Area2"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 1.04799e-06, -0.408777, -13.4876)
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="Area2/PlayerB"]
+transform = Transform3D(0.299985, 0, 0.00301587, 0, 0.3, 0, -0.00301587, 0, 0.299985, 0, 0.280472, 0)
+material_override = SubResource("StandardMaterial3D_ewagk")
+mesh = SubResource("SphereMesh_onanq")
+
+[node name="FloatingChoices" type="Node3D" parent="Area2/PlayerB" node_paths=PackedStringArray("accept_button", "decline_button")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.86255e-08, 0.861799, -0.443791)
+visible = false
+script = ExtResource("8_iadbr")
+accept_button = NodePath("AcceptButton")
+decline_button = NodePath("DeclineButton")
+click_sound = ExtResource("7_xh0us")
+
+[node name="AcceptButton" type="MeshInstance3D" parent="Area2/PlayerB/FloatingChoices"]
+transform = Transform3D(0.15, 0, 0, 0, -6.55671e-09, -0.15, 0, 0.15, -6.55671e-09, -0.454678, -0.299999, 0)
+material_override = SubResource("StandardMaterial3D_ywoti")
+mesh = SubResource("PlaneMesh_2wnap")
+
+[node name="DeclineButton" type="MeshInstance3D" parent="Area2/PlayerB/FloatingChoices"]
+transform = Transform3D(0.15, 0, 0, 0, -6.55671e-09, -0.15, 0, 0.15, -6.55671e-09, 0.446616, -0.299999, 0)
+material_override = SubResource("StandardMaterial3D_m2gdp")
+mesh = SubResource("PlaneMesh_2wnap")
+
+[node name="InfoScreenB" type="Node3D" parent="Area2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 1, 1.15117e-06, 2.51026, -15.9121)
+script = ExtResource("4_iadbr")
+newspaper_texture = ExtResource("5_ywoti")
+posting_texture = ExtResource("6_m2gdp")
+interaction_sound = ExtResource("7_xh0us")
+
+[node name="ScreenMesh" type="MeshInstance3D" parent="Area2/InfoScreenB"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.231228, 0)
+material_override = SubResource("StandardMaterial3D_wosn6")
+mesh = SubResource("BoxMesh_iyveo")
+
+[node name="GroundMesh" type="MeshInstance3D" parent="Area2"]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_g7rja")
+mesh = SubResource("PlaneMesh_rhvcf")
+skeleton = NodePath("../..")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Area2"]
+transform = Transform3D(0.95118, 0.0997652, -0.292069, 0.00458879, 0.94164, 0.33659, 0.308604, -0.321498, 0.895211, -9.63261, 1.68183, 5.58082)
+shadow_enabled = true
+
+[node name="Canyon" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, 0, -9.96799)
+
+[node name="GroundMesh" type="MeshInstance3D" parent="Canyon"]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 10, 0, 0, -30.0479)
+material_override = SubResource("StandardMaterial3D_g7rja")
+mesh = SubResource("PlaneMesh_rhvcf")
+skeleton = NodePath("../..")
+
+[node name="WallMeshArea1" type="MeshInstance3D" parent="Canyon"]
+transform = Transform3D(20, 0, 0, 0, -8.74228e-07, 5, 0, -20, -2.18557e-07, 0, 5, -20.0479)
+material_override = SubResource("StandardMaterial3D_g7rja")
+mesh = SubResource("PlaneMesh_rhvcf")
+skeleton = NodePath("../..")
+
+[node name="WallMeshArea2" type="MeshInstance3D" parent="Canyon"]
+transform = Transform3D(-20, -1.74846e-06, -1.91069e-14, 0, -8.74228e-07, 5, -1.74846e-06, 20, 2.18557e-07, 0, 5, -40.0479)
+material_override = SubResource("StandardMaterial3D_g7rja")
+mesh = SubResource("PlaneMesh_rhvcf")
+skeleton = NodePath("../..")
+
+[node name="PipeConnection" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.34, 0, 10, -24.7655)
+
+[node name="CommPipe" type="MeshInstance3D" parent="PipeConnection"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_onanq")
+
+[node name="PulseDot" type="MeshInstance3D" parent="PipeConnection"]
+transform = Transform3D(1, 0, 0, 0, -1.31134e-08, 1, 0, -0.3, -4.37114e-08, 0, 0, 26.9971)
+visible = false
+mesh = SubResource("CylinderMesh_yqcut")
+surface_material_override/0 = SubResource("StandardMaterial3D_iadbr")
+
+[node name="ResourceA" type="MeshInstance3D" parent="PipeConnection"]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0)
+visible = false
+mesh = ExtResource("11_m2gdp")
+surface_material_override/0 = SubResource("StandardMaterial3D_0a5yp")
+surface_material_override/1 = SubResource("StandardMaterial3D_6vkod")
+
+[node name="ResourceB" type="MeshInstance3D" parent="PipeConnection"]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_0pp2y")
+mesh = ExtResource("12_xh0us")
+
+[node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0488071, 11.7949, -5.51576)
+
+[node name="MainCamera" type="Camera3D" parent="CameraRig"]
