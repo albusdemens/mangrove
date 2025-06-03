@@ -1,5 +1,7 @@
 # Project Mangrove
 
+[![Mangrove first half](https://youtu.be/rCvSwxU-kUI/maxresdefault.jpg)](https://youtu.be/rCvSwxU-kUI)
+
 Project Mangrove is a 3D collaborative survival game, developed by Alberto Cereser and Volker Hartmann. Engine: Godot 4.4. 
 
 The current goal for Project Mangrove is to make a gameplay video. 
