@@ -2,9 +2,13 @@
 
 [![Mangrove first half](https://img.youtube.com/vi/rCvSwxU-kUI/maxresdefault.jpg)](https://youtu.be/rCvSwxU-kUI)
 
-Project Mangrove is a 3D collaborative survival game, developed by Alberto Cereser and Volker Hartmann. Game engine: <img src="./assets/Godot_icon.png" alt="Godot 4.4" width="20" height="20"> Godot 4.4 <img src="./assets/Godot_icon.png" alt="Godot 4.4" width="20" height="20">.
+Project Mangrove is a 3D collaborative survival game, developed by Saltwater Labs. Game engine: <img src="./assets/Godot_icon.png" alt="Godot 4.4" width="20" height="20"> Godot 4.4 <img src="./assets/Godot_icon.png" alt="Godot 4.4" width="20" height="20">.
 
 The current goal for Project Mangrove is to make a gameplay video. 
+
+## Contacts and Patreon
+
+The best way to stay up-to-date on the project is to check our [Patreon page](https://www.patreon.com/SaltwaterLabs).
 
 ## Gameplay video scenes
 
