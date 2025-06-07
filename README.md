@@ -10,19 +10,19 @@ The current goal for Project Mangrove is to make a gameplay video.
 
 All footage is in the Google Drive folder. 
 
-✅ Scene 1 - note: for these scenes, check the Scene1 branch
-  ✅ Overview zeppelin
-  ✅ Zeppelin crashes against the mountain
-✅ Scene 2 & 3
-  ✅ Camera movement along the mountain (top to bottom)
-  ✅ View of the mountain top, with 16 characters - no characters, too complex
-  ✅ Show mountain top split in four quadrants
-  ✅ The characters start moving; illustrate movements (far away and 3rd person)
-⏳ Scene 4
-⏳ Scene 5
-⏳ Scene 6
-⏳ Intro page
-⏳ Credits
+- ✅ Scene 1 - note: for these scenes, check the Scene1 branch
+  - ✅ Overview zeppelin
+  - ✅ Zeppelin crashes against the mountain
+- ✅ Scene 2 & 3
+  - ✅ Camera movement along the mountain (top to bottom)
+  - ✅ View of the mountain top, with 16 characters - no characters, too complex
+  - ✅ Show mountain top split in four quadrants
+  - ✅ The characters start moving; illustrate movements (far away and 3rd person)
+- ⏳ Scene 4
+- ⏳ Scene 5
+- ⏳ Scene 6
+- ⏳ Intro page
+- ⏳ Credits
 
 ## Notebook folder
 
